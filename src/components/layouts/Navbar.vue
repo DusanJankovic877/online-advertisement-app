@@ -20,15 +20,14 @@
         <button class="btn btn-danger sign-out " @click="handleLogout()">Sign out</button>  
       </div>
       <div class="signed-out" v-else>
-        <router-link 
-          class="btn btn-primary" 
+        <router-link  class="btn btn-primary " 
           :to="{name: 'login-signup', params:{option: 'login'}}" 
           @click="handleAuthErrors('login')"
         >
           Login
         </router-link>
-        <router-link 
-          class="btn btn-secondary" 
+
+        <router-link  class="btn btn-secondary sign-up" 
           :to="{name: 'login-signup', 
           params:{option: 'signup'}}" 
           @click="handleAuthErrors('signup')"
@@ -102,10 +101,8 @@ export default {
 </script>
 
 <style>
-.add-ad{
+.add-ad, .sign-out, .sign-up{
   margin-left: 10px;
 }
-.sign-out{
-  margin-left: 10px;
-}
+
 </style>
