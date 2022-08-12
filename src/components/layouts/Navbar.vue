@@ -20,8 +20,21 @@
         <button class="btn btn-danger sign-out " @click="handleLogout()">Sign out</button>  
       </div>
       <div class="signed-out" v-else>
-        <router-link class="btn btn-primary" :to="{name: 'login-signup', params:{option: 'login'}}">Login</router-link>
-        <router-link class="btn btn-secondary" :to="{name: 'login-signup', params:{option: 'signup'}}">Sign up</router-link>
+        <router-link 
+          class="btn btn-primary" 
+          :to="{name: 'login-signup', params:{option: 'login'}}" 
+          @click="handleAuthErrors('login')"
+        >
+          Login
+        </router-link>
+        <router-link 
+          class="btn btn-secondary" 
+          :to="{name: 'login-signup', 
+          params:{option: 'signup'}}" 
+          @click="handleAuthErrors('signup')"
+        >
+          Sign up
+        </router-link>
       </div>
 
     </div>
@@ -35,16 +48,46 @@ import store from '../../store';
 
 export default {
   computed:{
-    ...mapGetters({loggedUser: 'authModule/loggedUser', isLogged: 'authModule/isLogged'})
+    /**
+     * Getting data from vuex store
+     */
+    ...mapGetters({
+      loggedUser: 'authModule/loggedUser', 
+      isLogged: 'authModule/isLogged', 
+      authErrors: 'errorsModule/authErrors'})
   },
   methods:{
-    ...mapActions({getLogout: 'authModule/getLogout'}),
+    /**
+     * Getting actions from vuex store
+     */
+    ...mapActions({
+      getLogout: 'authModule/getLogout', 
+      deleteAuthErrors: 'errorsModule/deleteAuthErrors'}),
+    /**
+     * Sending information to vuex store to logout user.
+     * And routing to home page
+     */
     async handleLogout(){
       await this.getLogout();
       if(!this.isLogged && this.loggedUser === null)this.$router.push('/')
+    },
+    /**
+     * Deleting error messages from vuex for Authentication forms
+     * based on String that method recives.
+     * @param {String} val 
+     */
+    handleAuthErrors(val){
+      if(this.authErrors){
+        if(val !== 'login')this.deleteAuthErrors()
+        else this.deleteAuthErrors()
+      }
     }
   },
   created(){
+    /**
+     * When view is created user is requested from API 
+     * based on token from localStorage.
+     */
     store.dispatch('authModule/attempt', localStorage.getItem('token'))
   }
 }

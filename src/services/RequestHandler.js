@@ -43,5 +43,33 @@ export class RequestHandler {
                   
             return config;
         });
+        this.apiClient.interceptors.response.use(response => {
+            // await delay(3000);
+            // store.dispatch('doneLoading')
+            return response;
+
+        }, async error => {
+            console.log('ERROR', error.response.data);
+            
+            if (error.response.status === 422) {
+                if (error.response.data.errors) {
+                    console.log('ERROR', error.response.data);
+                    await store.dispatch('errorsModule/setAuthErrors', error.response.data.errors)
+                }
+                // await store.dispatch('doneLoading')
+            } 
+            // else if (error.response.status === 422) {
+            //     if (error.response.config.url === '/auth/login') {
+            //         await store.dispatch('AdminModule/setAuthError', error.response.data.message)
+            //         await store.dispatch('AdminModule/setAuthErrors', error.response.data.errors)
+            //     } else {
+            //         await store.dispatch('setErrors', error.response.data.errors)
+            //     }
+            //     await store.dispatch('doneLoading')
+            //     return Promise.resolve();
+            // } else {
+            //     return Promise.reject(error);
+            // }
+        });
     }
 }

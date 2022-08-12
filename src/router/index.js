@@ -2,8 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import LoginSignUp from '../views/LoginSignUp.vue'
 import CreateAdd from '../views/LoginSignUp.vue'
+import NotFound from '../views/NotFound.vue'
 
 const routes = [
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound
+  },
   {
     path: '/',
     name: 'Home',
