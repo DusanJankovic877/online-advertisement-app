@@ -23,7 +23,10 @@
             </div>
         </div>
         <div v-else></div>
-
+        <div class="errors" v-if="unauthError">
+            <p>{{unauthError}}</p>
+        </div>
+        <div v-else></div>
         <button 
             class="btn btn-success" 
             @click="handleSubmit($route.params.option === 'login' ? 'Login' : 'Register')"
@@ -52,7 +55,10 @@ export default {
         /**
          * Getting data from vuex store
          */
-        ...mapGetters({authErrors: 'errorsModule/authErrors'})
+        ...mapGetters({
+            authErrors: 'errorsModule/authErrors', 
+            unauthError: 'errorsModule/unauthError',       
+        })
     },
     methods: {
         /**
@@ -61,7 +67,9 @@ export default {
         ...mapActions({
             getSignUpData:'authModule/getSignUpData', 
             getLoginData: 'authModule/getLoginData',
-            deleteAuthErrors: 'errorsModule/deleteAuthErrors'
+            deleteAuthErrors: 'errorsModule/deleteAuthErrors',
+            deleteUnauthError: 'errorsModule/deleteUnauthError',  
+
         }),
         /**
          * Sending data to Vuex store based on String that is passed.
@@ -80,6 +88,7 @@ export default {
          * Before component is unmounted/destroyed delete auth errors
          */
         this.deleteAuthErrors()
+        this.deleteUnauthError()
     }
 }
 </script>

@@ -62,7 +62,9 @@ export default {
      */
     ...mapActions({
       getLogout: 'authModule/getLogout', 
-      deleteAuthErrors: 'errorsModule/deleteAuthErrors'}),
+      deleteAuthErrors: 'errorsModule/deleteAuthErrors',
+      deleteUnauthError: 'errorsModule/deleteUnauthError',  
+    }),
     /**
      * Sending information to vuex store to logout user.
      * And routing to home page
@@ -78,8 +80,14 @@ export default {
      */
     handleAuthErrors(val){
       if(this.authErrors){
-        if(val !== 'login')this.deleteAuthErrors()
-        else this.deleteAuthErrors()
+        if(val !== 'login'){
+          this.deleteAuthErrors()
+          this.deleteUnauthError()
+        }
+        else{          
+          this.deleteAuthErrors()
+          this.deleteUnauthError()
+        } 
       }
     }
   },

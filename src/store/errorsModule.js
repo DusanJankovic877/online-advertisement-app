@@ -1,7 +1,8 @@
 const errorsModule = {
     namespaced: true,
     state:{
-        authErrors: {}
+        authErrors: {},
+        unauthError: null
     },
     mutations:{
         /**
@@ -21,6 +22,12 @@ const errorsModule = {
          */
         DELETE_AUTH_ERRORS(state){
             state.authErrors = {}
+        },
+        SET_UNAUTH_ERROR(state, error) {
+            state.unauthError = error
+        },
+        DELETE_UNAUTH_ERRORS(state) {
+            state.unauthError = null
         }
     },
     actions:{
@@ -42,10 +49,19 @@ const errorsModule = {
          */
         deleteAuthErrors({ commit }){
             commit('DELETE_AUTH_ERRORS')
+        },
+        setUnauthError({ commit }, error){
+            commit('SET_UNAUTH_ERROR', error)
+            console.log('SET_UNAUTH_ERROR', error);
+        },
+        deleteUnauthError({ commit }){
+            commit('DELETE_UNAUTH_ERRORS')
+
         }
     },
     getters:{
-        authErrors: (state)=> state.authErrors
+        authErrors: (state)=> state.authErrors,
+        unauthError: (state) => state.unauthError
     },
 }
 export default errorsModule

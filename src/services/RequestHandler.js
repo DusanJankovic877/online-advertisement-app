@@ -58,6 +58,10 @@ export class RequestHandler {
                 }
                 // await store.dispatch('doneLoading')
             } 
+            else if(error.response.status === 401){
+                // console.log('unauth', error.response);
+                await store.dispatch('errorsModule/setUnauthError', error.response.data.error)
+            }
             // else if (error.response.status === 422) {
             //     if (error.response.config.url === '/auth/login') {
             //         await store.dispatch('AdminModule/setAuthError', error.response.data.message)
