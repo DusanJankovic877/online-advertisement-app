@@ -11,22 +11,50 @@
           <router-link class="nav-link active" aria-current="page" to="/">Home</router-link>
         </li>
       </ul>
-      <form class="d-flex">
-
+      <div v-if="loggedUser">
+      {{loggedUser.name}}
+      </div>
+      <div v-else></div>
+      <div class="logged" v-if="isLogged">
+        <router-link class="btn btn-success add-ad" :to="{name: 'add-ad'}">Add new ad</router-link>  
+        <button class="btn btn-danger sign-out " @click="handleLogout()">Sign out</button>  
+      </div>
+      <div class="signed-out" v-else>
         <router-link class="btn btn-primary" :to="{name: 'login-signup', params:{option: 'login'}}">Login</router-link>
         <router-link class="btn btn-secondary" :to="{name: 'login-signup', params:{option: 'signup'}}">Sign up</router-link>
-      </form>
+      </div>
+
     </div>
   </div>
 </nav>
 </template>
 
 <script>
-export default {
+import { mapActions, mapGetters } from 'vuex'
+import store from '../../store';
 
+export default {
+  computed:{
+    ...mapGetters({loggedUser: 'authModule/loggedUser', isLogged: 'authModule/isLogged'})
+  },
+  methods:{
+    ...mapActions({getLogout: 'authModule/getLogout'}),
+    async handleLogout(){
+      await this.getLogout();
+      if(!this.isLogged && this.loggedUser === null)this.$router.push('/')
+    }
+  },
+  created(){
+    store.dispatch('authModule/attempt', localStorage.getItem('token'))
+  }
 }
 </script>
 
 <style>
-
+.add-ad{
+  margin-left: 10px;
+}
+.sign-out{
+  margin-left: 10px;
+}
 </style>

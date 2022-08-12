@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// import store from '../store';
+import store from '../store';
 
 // import router from '../router'
 // import  NProgress  from 'nprogress';
@@ -21,25 +21,27 @@ export class RequestHandler {
         //       }, delayInms);
         //     });
         //   }
-        // this.apiClient.interceptors.request.use(config => {
-        //     store.dispatch('startLoading')
-        //     if (localStorage.getItem('token')) {
-        //         config.headers.common['Authorization'] = `Bearer ${store.state.AdminModule.token}`
-        //     }
-            // store.subscribe((mutation) => {
-            //     switch (mutation.type) {
-            //         case 'AdminModule/SET_TOKEN':
-            //             if (mutation.payload) {
-            //                 this.apiClient.defaults.headers.common['Authorization'] = `Bearer ${store.state.AdminModule.token}`
-            //                 localStorage.setItem('token', mutation.payload)
-            //             } else {
-            //                 this.apiClient.defaults.headers.common['Authorization'] = null
-            //                 localStorage.removeItem('token')
-            //             }
-            //             break;
-            //     }
-            // })
-        //     return config;
-        // });
+        this.apiClient.interceptors.request.use(config => {
+            // store.dispatch('startLoading')
+            if (localStorage.getItem('token')) {
+                config.headers['Authorization'] = `Bearer ${store.state.authModule.token}`
+                }
+                store.subscribe((mutation) => {
+                    switch (mutation.type) {
+                        case 'authModule/SET_TOKEN':
+                            if (mutation.payload) {
+                                this.apiClient.defaults.headers.common['Authorization'] = `Bearer ${store.state.authModule.token}`
+                                localStorage.setItem('token', mutation.payload)
+                            } else {
+                                this.apiClient.defaults.headers.common['Authorization'] = null
+                                localStorage.removeItem('token')
+                            }
+                            break;
+                        }
+                    })
+                    
+                  
+            return config;
+        });
     }
 }
