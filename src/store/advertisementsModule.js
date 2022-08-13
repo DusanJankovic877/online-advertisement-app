@@ -10,7 +10,6 @@ const advertisementModule = {
     },
     mutations:{
         SET_ADVERTISEMENTS(state, advertisements){
-            console.log('mutation', advertisements.data);
             state.advertisements = advertisements.data.data
         },
         SET_CURRENT_PAGE(state, currentPage){
@@ -26,14 +25,27 @@ const advertisementModule = {
         }
     },
     actions:{
-        async getAdvertisements({ commit }, pageNumber){
-           const ADVERTISEMENTS =  await advertisementServices.getAdvertisements(pageNumber)
-           console.log(ADVERTISEMENTS);
-            commit('SET_ADVERTISEMENTS', ADVERTISEMENTS);
-            commit('SET_CURRENT_PAGE', ADVERTISEMENTS.data.current_page)
-            commit('SET_LAST_PAGE', ADVERTISEMENTS.data.last_page)
-            commit('SET_LINKS', ADVERTISEMENTS.data.links)
-        }
+        
+        async getAdvertisements({ commit }, payload){
+            const CATEGORY = !!payload.category
+            const SEARCH_BY_TITLE = !!payload.searchByTitle
+            let advertisements = {}
+            if(SEARCH_BY_TITLE){
+                advertisements = await advertisementServices.getAdvertisementsByTitle({
+                    nextPage: payload.nextPage, 
+                    searchByTitle: payload.searchByTitle
+                });
+            }else if(CATEGORY){
+                advertisements =  await advertisementServices.getAdvertisementsByCategory({nextPage: payload.nextPage, category: payload.category});
+            }else{
+                advertisements =  await advertisementServices.getAdvertisements({nextPage: payload.nextPage});
+            }
+            commit('SET_ADVERTISEMENTS', advertisements);
+            commit('SET_CURRENT_PAGE', advertisements.data.current_page)
+            commit('SET_LAST_PAGE', advertisements.data.last_page)
+            commit('SET_LINKS', advertisements.data.links)
+        },
+        
     },
     getters:{
         advertisements: (state) => state.advertisements,

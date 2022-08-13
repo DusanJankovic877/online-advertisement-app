@@ -19,7 +19,7 @@ export default {
 
 <style>
 .nav-bot-margin{
-margin-bottom: 100px;
+  margin-bottom: 100px;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

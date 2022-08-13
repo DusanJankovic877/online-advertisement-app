@@ -49,17 +49,14 @@ export class RequestHandler {
             return response;
 
         }, async error => {
-            console.log('ERROR', error.response.data);
             
             if (error.response.status === 422) {
                 if (error.response.data.errors) {
-                    console.log('ERROR', error.response.data);
                     await store.dispatch('errorsModule/setAuthErrors', error.response.data.errors)
                 }
                 // await store.dispatch('doneLoading')
             } 
             else if(error.response.status === 401){
-                // console.log('unauth', error.response);
                 await store.dispatch('errorsModule/setUnauthError', error.response.data.error)
             }
             // else if (error.response.status === 422) {

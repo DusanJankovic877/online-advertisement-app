@@ -101,7 +101,6 @@ export default {
 </script>
 
 <style>
-
 .add-ad, .sign-out, .sign-up{
   margin-left: 10px;
 }
