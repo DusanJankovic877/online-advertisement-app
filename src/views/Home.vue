@@ -56,7 +56,7 @@
 
             <div class="input-group check-box-div">
               <div class="input-group-text ">
-                <input 
+                <input       
                   @input="handleGetUsersAdvertisements()"
                   class="form-check-input" 
                   id="user-checkbox" 
@@ -66,6 +66,10 @@
                 >
               </div>
                 <label for="user-checkbox" type="text" class="form-control radio-label" aria-label="Text  with radio button">Show mine only</label>
+                <div v-if="!isLogged && showUsersAdvertisements" class="errors" style="width: 182px; height:25px;">
+                  <p>{{this.error}}</p>
+                </div>
+                <div v-else></div>
             </div>
         </div>
 
@@ -140,7 +144,8 @@ export default {
           max: {id: 1,title:'Max'}
         },
         price: '',
-        showUsersAdvertisements: false
+        showUsersAdvertisements: false,
+        error: ''
       }
     },
 
@@ -194,9 +199,11 @@ export default {
         this.getAdvertisements({nextPage: this.currentPage, searchByPrice: price})
       },
       async handleGetUsersAdvertisements(){
-        console.log('this.loggedUser, this.currentPage', this.loggedUser.id);
-        await this.getUsersAdvertisements({nextPage: this.currentPage, usersAdvertisements: this.loggedUser.id, showUsersAdvertisements: !this.showUsersAdvertisements})
-        // else this.deleteUsersAdvertisements({nextPage: this.currentPage})
+
+        // console.log('this.loggedUser, this.currentPage', this.loggedUser.id);
+        if(this.isLogged)await this.getUsersAdvertisements({nextPage: this.currentPage, usersAdvertisements: this.loggedUser.id, showUsersAdvertisements: !this.showUsersAdvertisements})
+        else if(!this.isLogged && !this.showUsersAdvertisements)this.error = 'you are not logged in'
+        else if(!this.isLogged && this.showUsersAdvertisements)this.error = ''
 
       }
     },
