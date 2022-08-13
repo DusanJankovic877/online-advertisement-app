@@ -22,6 +22,9 @@ const advertisementModule = {
             links.shift()
             links.pop()
             state.links = links
+        },
+        DELETE_ADVERTISEMENTS(state){
+            state.advertisements = {}
         }
     },
     actions:{

@@ -3,7 +3,7 @@
  
     <div class="pagination">
 
-      <button class="btn btn-secondary paginate-prev" @click="handlePaginationPrev(currentPage)">prev</button>
+      <button class="btn btn-secondary paginate-prev" @click="handlePaginationPrev(currentPage)">Prev</button>
       <div class="links">
         <span 
           v-for="link in links" 
@@ -11,7 +11,7 @@
           >
           <a :class="link.active ? 'active' : '' " href="#" @click="handleSelectPage({nextPage: link.label, price: $route.params.price})">{{link.label}}</a></span>
       </div>
-      <button class="btn btn-secondary paginate-next" @click="handlePaginationNext(currentPage)">next</button>
+      <button class="btn btn-secondary paginate-next" @click="handlePaginationNext(currentPage)">Next</button>
     </div>
    
     <div class="filters container">
@@ -56,9 +56,16 @@
 
             <div class="input-group check-box-div">
               <div class="input-group-text ">
-                <input class="form-check-input" type="checkbox" value="" aria-label="Radio button for following text input">
+                <input 
+                  @input="handleGetUsersAdvertisements()"
+                  class="form-check-input" 
+                  id="user-checkbox" 
+                  type="checkbox" 
+                  v-model="showUsersAdvertisements" 
+                  aria-label="Radio button for following text input"
+                >
               </div>
-                <label type="text" class="form-control radio-label" aria-label="Text  with radio button">Show mine only</label>
+                <label for="user-checkbox" type="text" class="form-control radio-label" aria-label="Text  with radio button">Show mine only</label>
             </div>
         </div>
 
@@ -85,12 +92,17 @@
         </div>
       </div>
     </div>
+
     <div class="pagination">
-      <button class="btn btn-secondary paginate-prev" @click="handlePaginationPrev(currentPage)">prev</button>
+      <button class="btn btn-secondary paginate-prev" @click="handlePaginationPrev(currentPage)">Prev</button>
       <div class="links">
-        <span v-for="link in links" :key="link.id" :class="link.active ? 'active' : '' ">{{link.label}}</span>
+        <span 
+          v-for="link in links" 
+          :key="link.id" 
+          >
+          <a :class="link.active ? 'active' : '' " href="#" @click="handleSelectPage({nextPage: link.label, price: $route.params.price})">{{link.label}}</a></span>
       </div>
-      <button class="btn btn-secondary paginate-next" @click="handlePaginationNext(currentPage)">next</button>
+      <button class="btn btn-secondary paginate-next" @click="handlePaginationNext(currentPage)">Next</button>
     </div>
 
     <!-- <AvertisementCard  :advertisement="advertisement"/> -->
@@ -127,7 +139,8 @@ export default {
           min: {id: 0,title:'Min'},
           max: {id: 1,title:'Max'}
         },
-        price: ''
+        price: '',
+        showUsersAdvertisements: false
       }
     },
 
@@ -137,6 +150,7 @@ export default {
       },
       ...mapGetters({
         loggedUser: 'authModule/loggedUser', 
+        isLogged: 'authModule/isLogged', 
         currentPage: 'advertisementsModule/currentPage', 
         lastPage: 'advertisementsModule/lastPage',
         links: 'advertisementsModule/links'
@@ -145,7 +159,9 @@ export default {
     methods: {
       ...mapActions({
         getAdvertisements: 'advertisementsModule/getAdvertisements', 
-        getAdvertisementsByUserName: 'advertisementsModule/getAdvertisementsByUserName'
+        getAdvertisementsByUserName: 'advertisementsModule/getAdvertisementsByUserName',
+        getUsersAdvertisements: 'usersModule/getUsersAdvertisements',
+        deleteUsersAdvertisements: 'usersModule/deleteUsersAdvertisements'
       }),
       handlePaginationNext(currentPage){
         if(currentPage !== this.lastPage){
@@ -176,6 +192,12 @@ export default {
       handleSearchByPrice(price){
         this.$route.params.price = price
         this.getAdvertisements({nextPage: this.currentPage, searchByPrice: price})
+      },
+      async handleGetUsersAdvertisements(){
+        console.log('this.loggedUser, this.currentPage', this.loggedUser.id);
+        await this.getUsersAdvertisements({nextPage: this.currentPage, usersAdvertisements: this.loggedUser.id, showUsersAdvertisements: !this.showUsersAdvertisements})
+        // else this.deleteUsersAdvertisements({nextPage: this.currentPage})
+
       }
     },
     async beforeRouteEnter(to, from, next) {

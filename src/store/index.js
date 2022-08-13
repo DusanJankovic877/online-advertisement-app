@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 import authModule from './authModule';
 import errorsModule from './errorsModule';
 import advertisementsModule from './advertisementsModule';
+import usersModule from './usersModule';
 
 export default createStore({
   state: {
@@ -13,6 +14,7 @@ export default createStore({
   modules: {
     authModule,
     errorsModule,
-    advertisementsModule
+    advertisementsModule,
+    usersModule
   }
 })
