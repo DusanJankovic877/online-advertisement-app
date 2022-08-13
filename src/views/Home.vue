@@ -81,17 +81,18 @@
         <div class="card col-lg-2" v-for="advertisement in advertisements" :key="advertisement.id">
           <img :src="advertisement.image_url" class="card-img-top" alt="picture">
           <div class="card-body">
-            <h5>Title</h5><h5 class="card-title">{{advertisement.title}}</h5>
+            <h5></h5><h5 class="card-title">{{advertisement.title}}</h5>
             <p>Description</p><p class="card-text">{{advertisement.description}}</p>
             <p>Price</p><p class="card-text">{{advertisement.price}} &#8364;</p>
             <p>City</p><p class="card-text">{{advertisement.city}}</p>
             <p>Category</p><p class="card-text">{{advertisement.category}}</p>
             <!--- ovde puca id-->
-            <!-- <div v-if="loggedUser.id === advertisement.user_id" class="buttons"> 
+            <div v-if="loggedUser && loggedUser.id === advertisement.user_id" class="buttons">
+              <router-link class="btn btn-warning" :to="{name: 'advertisement', params:{ id: advertisement.id}}">Show Advertisement</router-link> 
               <button class="btn btn-warning">edit</button>
               <button class="btn btn-danger">delete</button>
             </div>
-            <div v-else></div> -->
+           <div v-else></div>
           </div>
         </div>
       </div>
@@ -127,16 +128,15 @@ export default {
     data(){
       return{
         categories:{
-          clothing: 'clothing',
-          tools: 'tools',
-          sports: 'sports',
-          accessories: 'accessories',
-          furniture: 'furniture',
-          pets: 'pets',
-          games: 'games',
-          books: 'books',
-          dolor: 'eveniet',
-          none: 'none'
+          clothing: 'Clothing',
+          tools: 'Tools',
+          sports: 'Sports',
+          accessories: 'Accessories',
+          furniture: 'Furniture',
+          pets: 'Pets',
+          games: 'Games',
+          books: 'Books',
+          none: 'None'
         },
         searchByTitle: '',
         prices: {

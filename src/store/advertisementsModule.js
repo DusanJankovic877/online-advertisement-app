@@ -3,7 +3,7 @@ const advertisementModule = {
     namespaced: true,
     state:{
         advertisements: {},
-        gallery: null,
+        advertisement: null,
         currentPage: null,
         lastPage:null,
         links: {}
@@ -11,6 +11,8 @@ const advertisementModule = {
     mutations:{
         SET_ADVERTISEMENTS(state, advertisements){
             state.advertisements = advertisements.data.data
+            // console.log(state.advertisements.target.id);
+
         },
         SET_CURRENT_PAGE(state, currentPage){
             state.currentPage = currentPage
@@ -25,6 +27,10 @@ const advertisementModule = {
         },
         DELETE_ADVERTISEMENTS(state){
             state.advertisements = {}
+        },
+        SET_ADVERTISEMENT(state, payload){
+            state.advertisement = payload.data
+            // console.log(state.advertisement.id);
         }
     },
     actions:{
@@ -51,10 +57,17 @@ const advertisementModule = {
             commit('SET_LAST_PAGE', advertisements.data.last_page)
             commit('SET_LINKS', advertisements.data.links)
         },
+        async getAdvertisement( { commit } , payload){
+
+            const ADVERTISEMENT = await advertisementServices.getAdvertisement(payload) 
+            commit('SET_ADVERTISEMENT', ADVERTISEMENT)
+            
+        }
         
     },
     getters:{
         advertisements: (state) => state.advertisements,
+        advertisement: (state) => state.advertisement,
         currentPage: (state) => state.currentPage,
         lastPage: (state) => state.lastPage,
         links: (state) => state.links

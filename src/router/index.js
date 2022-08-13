@@ -3,11 +3,13 @@ import Home from '../views/Home.vue'
 import LoginSignUp from '../views/LoginSignUp.vue'
 import CreateAdd from '../views/LoginSignUp.vue'
 import NotFound from '../views/NotFound.vue'
+import Advertisement from '../views/Advertisement.vue'
+import CreateEditAdvertisement from '../views/CreateEditAdvertisement.vue'
 
 const routes = [
   {
     path: '/:pathMatch(.*)*',
-    name: 'NotFound',
+    name: 'notFound',
     component: NotFound
   },
   {
@@ -16,16 +18,24 @@ const routes = [
     component: Home
   },
   {
+    path: '/advertisement/:id',
+    name: 'advertisement',
+    component: Advertisement
+  },
+  {
+    path: '/advertisement/edit/:id',
+    name: 'create-edit-advertisement',
+    component: CreateEditAdvertisement
+  },
+  {
     path: '/login-signup',
-    name: 'login-signup',
+    name: 'loginSignup',
     component: LoginSignUp
-
   },
   {
     path: '/add-ad',
-    name: 'add-ad',
+    name: 'addAd',
     component: CreateAdd
-
   },
   
 ]
