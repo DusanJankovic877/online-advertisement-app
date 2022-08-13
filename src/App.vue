@@ -1,5 +1,7 @@
 <template>
+<div class="nav-bot-margin">
   <Navbar/>
+</div>
   <router-view/>
 </template>
 <script>
@@ -16,6 +18,9 @@ export default {
 </script>>
 
 <style>
+.nav-bot-margin{
+margin-bottom: 100px;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
