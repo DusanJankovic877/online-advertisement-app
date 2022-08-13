@@ -2,34 +2,35 @@
   <div class="home">
  
     <div class="pagination">
+
       <button class="btn btn-secondary paginate-prev" @click="handlePaginationPrev(currentPage)">prev</button>
       <div class="links">
-        <span v-for="link in links" :key="link.id" :class="link.active ? 'active' : '' ">{{link.label}}</span>
+        <span 
+          v-for="link in links" 
+          :key="link.id" 
+          >
+          <a :class="link.active ? 'active' : '' " href="#" @click="handleSelectPage({nextPage: link.label, price: $route.params.price})">{{link.label}}</a></span>
       </div>
       <button class="btn btn-secondary paginate-next" @click="handlePaginationNext(currentPage)">next</button>
     </div>
    
-
-      
     <div class="filters container">
-      <!-- <div class="row"> -->
-        <div class="price-sort">
-          <div class="dropdown category-label">
-            <p>Sort by category</p>
-          </div>
-          <div class="col-lg-2 title-label">
-            <p>Sort by title</p>
-          </div>
-          <div class="price-label" >
-            <p>Sort by price</p>
-          </div>
-          <div class="check-box-div">
-            <p>Show users articles</p>
-          </div>
-        </div>
-      <!-- </div> -->
       <div class="price-sort">
+        <div class="dropdown category-label">
+          <p>Sort by category</p>
+        </div>
+        <div class="col-lg-2 title-label">
+          <p>Sort by title</p>
+        </div>
+        <div class="price-label" >
+          <p>Sort by price</p>
+        </div>
+        <div class="check-box-div">
+          <p>Show users articles</p>
+        </div>
+      </div>
 
+      <div class="price-sort">
         <div class="dropdown col-lg-1">
           <button class="btn category-button dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
             Category
@@ -40,7 +41,6 @@
         </div>
 
         <div class="col-lg-2">
-          <!-- <input type="text" v-model="searchByTitle" @input="handleSearchByTitle()"> -->
           <div class="input-group title-input">
             <input type="text" class="form-control" v-model="searchByTitle" @input="handleSearchByTitle()" placeholder="Title" aria-label="title">
           </div>
@@ -53,13 +53,7 @@
               </div>
               <label :for="'radio-input-'+price.id" type="text" class="form-control radio-label" aria-label="Text  with radio button">{{price.title}}</label>
             </div>
-<!-- 
-            <div class="input-group radio-input-div">
-              <div class="input-group-text">
-                <input class="form-check-input radio-input" name="price-sort" type="radio" :value="max" aria-label="Radio button for following text input">
-              </div>
-                <label type="text" class="form-control radio-label" aria-label="Text  with radio button">Max</label>
-            </div> -->
+
             <div class="input-group check-box-div">
               <div class="input-group-text ">
                 <input class="form-check-input" type="checkbox" value="" aria-label="Radio button for following text input">
@@ -132,7 +126,8 @@ export default {
         prices: {
           min: {id: 0,title:'Min'},
           max: {id: 1,title:'Max'}
-        }
+        },
+        price: ''
       }
     },
 
@@ -155,7 +150,7 @@ export default {
       handlePaginationNext(currentPage){
         if(currentPage !== this.lastPage){
           var nextPage = currentPage + 1
-          this.getAdvertisements({nextPage: nextPage})
+          this.getAdvertisements({nextPage: nextPage, searchByPrice: this.$route.params.price})
         }
       },
       handlePaginationPrev(currentPage){
@@ -163,6 +158,10 @@ export default {
           var prevPage = currentPage - 1
           this.getAdvertisements({nextPage: prevPage})
         }
+      },
+      handleSelectPage(payload){
+          this.price = payload.price ? payload.price : this.price
+          this.getAdvertisements({nextPage: payload.nextPage, searchByPrice: this.price})
       },
       handleCategorySearch(category){
         this.getAdvertisements({nextPage: this.currentPage, category: category === 'none' ? '' : category})
@@ -175,7 +174,8 @@ export default {
         }
       },
       handleSearchByPrice(price){
-        console.log(price);
+        this.$route.params.price = price
+        this.getAdvertisements({nextPage: this.currentPage, searchByPrice: price})
       }
     },
     async beforeRouteEnter(to, from, next) {
@@ -208,8 +208,13 @@ export default {
 span{
   padding: 5px;
 }
+.links > span > a{
+  color: #2C3E50;
+  text-decoration: none;
+
+}
 .active{
-  color: red;
+  color: red !important;
 }
 .search-advertisements{
   position: absolute;

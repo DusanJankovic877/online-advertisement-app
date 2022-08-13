@@ -29,6 +29,7 @@ const advertisementModule = {
         async getAdvertisements({ commit }, payload){
             const CATEGORY = !!payload.category
             const SEARCH_BY_TITLE = !!payload.searchByTitle
+            const SEARCH_BY_PRICE = !!payload.searchByPrice
             let advertisements = {}
             if(SEARCH_BY_TITLE){
                 advertisements = await advertisementServices.getAdvertisementsByTitle({
@@ -37,6 +38,8 @@ const advertisementModule = {
                 });
             }else if(CATEGORY){
                 advertisements =  await advertisementServices.getAdvertisementsByCategory({nextPage: payload.nextPage, category: payload.category});
+            }else if(SEARCH_BY_PRICE){
+                advertisements =  await advertisementServices.getAdvertisementsByPrice({nextPage: payload.nextPage, price: payload.searchByPrice});
             }else{
                 advertisements =  await advertisementServices.getAdvertisements({nextPage: payload.nextPage});
             }

@@ -10,6 +10,9 @@ class AdvertisementServices extends RequestHandler {
     async getAdvertisementsByTitle(payload){
         return await this.apiClient.get(`get-advertisements-by-title?page=${payload.nextPage}&title=${payload.searchByTitle}&category=${payload.category}`)
     }
+    async getAdvertisementsByPrice(payload){    
+        return await this.apiClient.get(`get-advertisements-by-price?page=${payload.nextPage}&price=${payload.price}&category=${payload.price}`)
+    }
 }
 const advertisementServices = new AdvertisementServices();
 export default advertisementServices;
