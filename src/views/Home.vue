@@ -12,21 +12,64 @@
 
       
     <div class="filters container">
-      <div class="row">
+      <!-- <div class="row"> -->
+        <div class="price-sort">
+          <div class="dropdown category-label">
+            <p>Sort by category</p>
+          </div>
+          <div class="col-lg-2 title-label">
+            <p>Sort by title</p>
+          </div>
+          <div class="price-label" >
+            <p>Sort by price</p>
+          </div>
+          <div class="check-box-div">
+            <p>Show users articles</p>
+          </div>
+        </div>
+      <!-- </div> -->
+      <div class="price-sort">
 
         <div class="dropdown col-lg-1">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+          <button class="btn category-button dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
             Category
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <li v-for="category in categories" :key="category.id" @click="handleCategorySearch(category)"><p>{{category}}</p></li>
           </ul>
         </div>
-  <div class="col-lg-2"><input type="text" v-model="searchByTitle" @input="handleSearchByTitle()"></div>
-  <div class="col-lg-1">po ceni min-max</div>
-  <div class="col-lg-1">checkbox show mine only</div>
-      </div>
-    </div>
+
+        <div class="col-lg-2">
+          <!-- <input type="text" v-model="searchByTitle" @input="handleSearchByTitle()"> -->
+          <div class="input-group title-input">
+            <input type="text" class="form-control" v-model="searchByTitle" @input="handleSearchByTitle()" placeholder="Title" aria-label="title">
+          </div>
+          </div>
+
+        <div class="price-sort">
+            <div class="input-group radio-input-div min-radio-input" v-for="price in prices" :key="price.id">
+              <div class="input-group-text">
+                <input :id="'radio-input-'+price.id" class="form-check-input radio-input" @input="handleSearchByPrice(price.title)" name="price-sort" type="radio" :value="price.title" aria-label="Checkbox for following text input">
+              </div>
+              <label :for="'radio-input-'+price.id" type="text" class="form-control radio-label" aria-label="Text  with radio button">{{price.title}}</label>
+            </div>
+<!-- 
+            <div class="input-group radio-input-div">
+              <div class="input-group-text">
+                <input class="form-check-input radio-input" name="price-sort" type="radio" :value="max" aria-label="Radio button for following text input">
+              </div>
+                <label type="text" class="form-control radio-label" aria-label="Text  with radio button">Max</label>
+            </div> -->
+            <div class="input-group check-box-div">
+              <div class="input-group-text ">
+                <input class="form-check-input" type="checkbox" value="" aria-label="Radio button for following text input">
+              </div>
+                <label type="text" class="form-control radio-label" aria-label="Text  with radio button">Show mine only</label>
+            </div>
+        </div>
+
+      </div><!--  end of row-->
+    </div><!--  end of filters container -->
    
     <div class="col-lg-10 m-auto cards">
       <div class="row">
@@ -85,7 +128,11 @@ export default {
           dolor: 'eveniet',
           none: 'none'
         },
-        searchByTitle: ''
+        searchByTitle: '',
+        prices: {
+          min: {id: 0,title:'Min'},
+          max: {id: 1,title:'Max'}
+        }
       }
     },
 
@@ -126,6 +173,9 @@ export default {
         }else{
           this.getAdvertisements({nextPage: this.currentPage, searchByTitle: this.searchByTitle})
         }
+      },
+      handleSearchByPrice(price){
+        console.log(price);
       }
     },
     async beforeRouteEnter(to, from, next) {
@@ -167,11 +217,78 @@ span{
 .filters{
   padding-top: 40px;
 }
+.category-label{
+  margin-left: -4px;
+  width: 117px;
+  height: 25px;
 
+}
+.title-label{
+   margin-left: 4px;
+}
+.price-label{
+  width: 200px; 
+  margin-left: 15px;
+}
+
+.category-button{
+  border-color: #CED4DA;
+  background-color: #E9ECEF;
+}
 .dropdown-menu > li > p{
   padding-left: 15px;
 }
 .dropdown-menu > li > p:hover{
   cursor: pointer;
+}
+.title-input{
+  margin-left: 10px;
+}
+  .price-sort, .filters-labels{
+    display: flex;
+  }
+  .price-sort > div > p{
+    margin-bottom: 0;
+  }
+  .min-radio-input:first-child{
+    margin-left: 20px;
+  }
+    .min-radio-input:nth-child(2){
+    margin-left: 10px;
+  }
+  .radio-input-div{
+    width: 100px !important;
+  }
+  .input-group-text{
+
+    height:38px;
+    width:38px;
+    border-radius: 0 !important;
+    
+  }
+.radio-input{
+  height:13px;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 5em !important;
+
+
+}
+.radio-label{
+  height:38px;
+  padding-top: 8px;
+  border-radius: 0 !important;
+  
+}
+.check-box-div{
+  width: 180px;
+  margin-left: 10px;
+  
+}
+.check-box-div > div > input {
+  height:13px;
+  margin: 0 !important;
+  padding: 0 !important;
+
 }
 </style>
