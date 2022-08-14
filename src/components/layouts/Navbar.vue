@@ -16,7 +16,7 @@
       </div>
       <div v-else></div>
       <div class="logged" v-if="isLogged">
-        <router-link class="btn btn-success add-ad" :to="{name: 'addAd'}">Add new ad</router-link>  
+        <router-link class="btn btn-success add-ad" :to="{name: 'create-edit-advertisement'}">Add new ad</router-link>  
         <button class="btn btn-danger sign-out " @click="handleLogout()">Sign out</button>  
       </div>
       <div class="signed-out" v-else>

@@ -14,7 +14,7 @@ const routes = [
   },
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: Home
   },
   {
@@ -24,6 +24,11 @@ const routes = [
   },
   {
     path: '/advertisement/edit/:id',
+    name: 'create-edit-advertisement',
+    component: CreateEditAdvertisement
+  },
+  {
+    path: '/advertisement/create',
     name: 'create-edit-advertisement',
     component: CreateEditAdvertisement
   },
@@ -42,7 +47,10 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior() {
+    document.getElementById('app').scrollIntoView({block: "start", behavior: 'smooth' });
+}
 })
 
 export default router

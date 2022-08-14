@@ -11,8 +11,6 @@ const advertisementModule = {
     mutations:{
         SET_ADVERTISEMENTS(state, advertisements){
             state.advertisements = advertisements.data.data
-            // console.log(state.advertisements.target.id);
-
         },
         SET_CURRENT_PAGE(state, currentPage){
             state.currentPage = currentPage
@@ -29,8 +27,7 @@ const advertisementModule = {
             state.advertisements = {}
         },
         SET_ADVERTISEMENT(state, payload){
-            state.advertisement = payload.data
-            // console.log(state.advertisement.id);
+            state.advertisement = payload
         }
     },
     actions:{
@@ -60,8 +57,18 @@ const advertisementModule = {
         async getAdvertisement( { commit } , payload){
 
             const ADVERTISEMENT = await advertisementServices.getAdvertisement(payload) 
-            commit('SET_ADVERTISEMENT', ADVERTISEMENT)
+            commit('SET_ADVERTISEMENT', ADVERTISEMENT.data)
             
+        },
+        async getCreateEditAdvertisement( {commit} , payload){
+            let advertisement = {}
+            if(payload.heading === 'Edit Advertisement'){
+                advertisement = await advertisementServices.editAdvertisement(payload.advertisement)
+                commit('SET_ADVERTISEMENT', advertisement.data.advertisement)
+            }
+            else if(payload.heading === 'Create Advertisement'){
+                advertisement = await advertisementServices.createAdvertisement(payload.advertisement)
+            }
         }
         
     },

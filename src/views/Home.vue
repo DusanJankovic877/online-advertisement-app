@@ -185,7 +185,7 @@ export default {
           this.getAdvertisements({nextPage: payload.nextPage, searchByPrice: this.price})
       },
       handleCategorySearch(category){
-        this.getAdvertisements({nextPage: this.currentPage, category: category === 'none' ? '' : category})
+        this.getAdvertisements({nextPage: this.currentPage, category: category === 'None' ? '' : category})
       },
       handleSearchByTitle(){
         if(this.searchByTitle === ''){
@@ -199,12 +199,9 @@ export default {
         this.getAdvertisements({nextPage: this.currentPage, searchByPrice: price})
       },
       async handleGetUsersAdvertisements(){
-
-        // console.log('this.loggedUser, this.currentPage', this.loggedUser.id);
         if(this.isLogged)await this.getUsersAdvertisements({nextPage: this.currentPage, usersAdvertisements: this.loggedUser.id, showUsersAdvertisements: !this.showUsersAdvertisements})
         else if(!this.isLogged && !this.showUsersAdvertisements)this.error = 'you are not logged in'
         else if(!this.isLogged && this.showUsersAdvertisements)this.error = ''
-
       }
     },
     async beforeRouteEnter(to, from, next) {
@@ -214,6 +211,9 @@ export default {
 }
 </script>
 <style scoped>
+.home{
+  padding-top: 100px;
+}
 .card{
   margin: 1.66%;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="col-lg-7 m-auto">
+  <div class="col-lg-7 m-auto login-signup">
     <form @submit.prevent>
         <div class="mb-3">
             <label for="userName" class="form-label">User name</label>
@@ -94,6 +94,9 @@ export default {
 </script>
 
 <style>
+.login-signup{
+    padding-top: 150px;
+}
 .errors{
     background-color: rgba(255, 146, 146, 0.692);
     color: rgb(209, 31, 31);

@@ -16,6 +16,12 @@ class AdvertisementServices extends RequestHandler {
     async getAdvertisement(id){
         return await this.apiClient.post('get-advertisement', {id: id})
     }
+    async editAdvertisement(advertisement){
+        return await this.apiClient.post('edit-advertisement', advertisement)
+    }
+    async createAdvertisement(advertisement){
+        return await this.apiClient.post('create-advertisement', advertisement)
+    }
 }
 const advertisementServices = new AdvertisementServices();
 export default advertisementServices;

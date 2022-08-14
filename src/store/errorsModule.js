@@ -52,7 +52,6 @@ const errorsModule = {
         },
         setUnauthError({ commit }, error){
             commit('SET_UNAUTH_ERROR', error)
-            console.log('SET_UNAUTH_ERROR', error);
         },
         deleteUnauthError({ commit }){
             commit('DELETE_UNAUTH_ERRORS')

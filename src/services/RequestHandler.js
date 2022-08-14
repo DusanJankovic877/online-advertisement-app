@@ -53,11 +53,15 @@ export class RequestHandler {
             if (error.response.status === 422) {
                 if (error.response.data.errors) {
                     await store.dispatch('errorsModule/setAuthErrors', error.response.data.errors)
+                    return Promise.resolve();
                 }
                 // await store.dispatch('doneLoading')
             } 
             else if(error.response.status === 401){
                 await store.dispatch('errorsModule/setUnauthError', error.response.data.error)
+                return Promise.resolve();
+            }else {
+                return Promise.reject(error);
             }
             // else if (error.response.status === 422) {
             //     if (error.response.config.url === '/auth/login') {
@@ -68,9 +72,7 @@ export class RequestHandler {
             //     }
             //     await store.dispatch('doneLoading')
             //     return Promise.resolve();
-            // } else {
-            //     return Promise.reject(error);
-            // }
+            // } 
         });
     }
 }

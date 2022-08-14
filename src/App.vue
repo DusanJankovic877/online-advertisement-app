@@ -1,7 +1,7 @@
 <template>
-<div class="nav-bot-margin">
+<!-- <div class="nav-bot-margin"> -->
   <Navbar/>
-</div>
+<!-- </div> -->
   <router-view/>
 </template>
 <script>
