@@ -6,7 +6,14 @@ const advertisementModule = {
         advertisement: null,
         currentPage: null,
         lastPage:null,
-        links: {}
+        links: {},
+        filterAdvertisements: {
+            category: '',
+            title: '',
+            priceOrder: '',
+            userId: ""
+        },
+        showUsersAdverts: false
     },
     mutations:{
         SET_ADVERTISEMENTS(state, advertisements){
@@ -31,43 +38,48 @@ const advertisementModule = {
         }
     },
     actions:{
-        
-        async getAdvertisements({ commit }, payload){
-            const CATEGORY = !!payload.category
-            const SEARCH_BY_TITLE = !!payload.searchByTitle
-            const SEARCH_BY_PRICE = !!payload.searchByPrice
-            let advertisements = {}
-            if(SEARCH_BY_TITLE){
-                advertisements = await advertisementServices.getAdvertisementsByTitle({
-                    nextPage: payload.nextPage, 
-                    searchByTitle: payload.searchByTitle
-                });
-            }else if(CATEGORY){
-                advertisements =  await advertisementServices.getAdvertisementsByCategory({nextPage: payload.nextPage, category: payload.category});
-            }else if(SEARCH_BY_PRICE){
-                advertisements =  await advertisementServices.getAdvertisementsByPrice({nextPage: payload.nextPage, price: payload.searchByPrice});
-            }else{
-                advertisements =  await advertisementServices.getAdvertisements({nextPage: payload.nextPage});
+        async filterAdverts({state, commit }, payload){
+            // console.log('none', payload.category);
+            if(payload.category )if(payload.category !== 'None')state.filterAdvertisements.category = payload.category
+            else if(payload.category === 'None'){console.log('none', payload.category); state.filterAdvertisements.category = ''}
+            if(payload.title || payload.title === null)state.filterAdvertisements.title = payload.title
+            if(payload.priceOrder)state.filterAdvertisements.priceOrder  = payload.priceOrder 
+            if(payload.showUsersAdvertisements){
+                state.showUsersAdverts = payload.showUsersAdvertisements
+                state.filterAdvertisements.userId = payload.userId
+            }else if(payload.showUsersAdvertisements === false){
+                state.showUsersAdverts = payload.showUsersAdvertisements
+                state.filterAdvertisements.userId = ''
             }
-            commit('SET_ADVERTISEMENTS', advertisements);
-            commit('SET_CURRENT_PAGE', advertisements.data.current_page)
-            commit('SET_LAST_PAGE', advertisements.data.last_page)
-            commit('SET_LINKS', advertisements.data.links)
+
+            const FILTERED_ADVERTISEMENTS = await advertisementServices.filterAvertisements(state.filterAdvertisements)
+            commit('SET_ADVERTISEMENTS', FILTERED_ADVERTISEMENTS);
+            commit('SET_CURRENT_PAGE', FILTERED_ADVERTISEMENTS.data.current_page)
+            commit('SET_LAST_PAGE', FILTERED_ADVERTISEMENTS.data.last_page)
+            commit('SET_LINKS', FILTERED_ADVERTISEMENTS.data.links)
+            // console.log('FILTERED_ADVERTISEMENTS',FILTERED_ADVERTISEMENTS.data.data);
+        },
+        async getAdvertisements( {commit} , payload){
+            const ADVERTISEMENTS =  await advertisementServices.getAdvertisements({nextPage: payload.nextPage});
+            commit('SET_ADVERTISEMENTS', ADVERTISEMENTS);
+            commit('SET_CURRENT_PAGE', ADVERTISEMENTS.data.current_page)
+            commit('SET_LAST_PAGE', ADVERTISEMENTS.data.last_page)
+            commit('SET_LINKS', ADVERTISEMENTS.data.links)
         },
         async getAdvertisement( { commit } , payload){
-
             const ADVERTISEMENT = await advertisementServices.getAdvertisement(payload) 
             commit('SET_ADVERTISEMENT', ADVERTISEMENT.data)
             
         },
         async getCreateEditAdvertisement( {commit} , payload){
-            let advertisement = {}
+          
             if(payload.heading === 'Edit Advertisement'){
-                advertisement = await advertisementServices.editAdvertisement(payload.advertisement)
-                commit('SET_ADVERTISEMENT', advertisement.data.advertisement)
+                // console.log('Edit Advertisement');
+                const ADVERTISEMENT = await advertisementServices.editAdvertisement(payload.advertisement)
+                commit('SET_ADVERTISEMENT', ADVERTISEMENT.data.advertisement)
             }
             else if(payload.heading === 'Create Advertisement'){
-                advertisement = await advertisementServices.createAdvertisement(payload.advertisement)
+                await advertisementServices.createAdvertisement(payload.advertisement)
             }
         }
         
@@ -77,7 +89,9 @@ const advertisementModule = {
         advertisement: (state) => state.advertisement,
         currentPage: (state) => state.currentPage,
         lastPage: (state) => state.lastPage,
-        links: (state) => state.links
+        links: (state) => state.links,
+        filterAdvertisements: (state) => state.filterAdvertisements,
+        showUsersAdverts: (state) => state.showUsersAdverts
     }
 }
 export default advertisementModule;

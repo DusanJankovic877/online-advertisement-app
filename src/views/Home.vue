@@ -25,7 +25,7 @@
         <div class="price-label" >
           <p>Sort by price</p>
         </div>
-        <div class="check-box-div">
+        <div class="check-box-div" v-if="loggedUser">
           <p>Show users articles</p>
         </div>
       </div>
@@ -36,28 +36,28 @@
             Category
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li v-for="category in categories" :key="category.id" @click="handleCategorySearch(category)"><p>{{category}}</p></li>
+            <li v-for="category in categories" :key="category.id" @click="handleFilters({category: category})"><p>{{category}}</p></li>
           </ul>
         </div>
 
         <div class="col-lg-2">
           <div class="input-group title-input">
-            <input type="text" class="form-control" v-model="searchByTitle" @input="handleSearchByTitle()" placeholder="Title" aria-label="title">
+            <input type="text" class="form-control" v-model="searchByTitle" @input="handleFilters({title: searchByTitle})" placeholder="Title" aria-label="title">
           </div>
           </div>
 
         <div class="price-sort">
             <div class="input-group radio-input-div min-radio-input" v-for="price in prices" :key="price.id">
               <div class="input-group-text">
-                <input :id="'radio-input-'+price.id" class="form-check-input radio-input" @input="handleSearchByPrice(price.title)" name="price-sort" type="radio" :value="price.title" aria-label="Checkbox for following text input">
+                <input :id="'radio-input-'+price.id" class="form-check-input radio-input" @input="handleFilters({priceOrder: price.value})" name="price-sort" type="radio" :value="price.title" aria-label="Checkbox for following text input">
               </div>
               <label :for="'radio-input-'+price.id" type="text" class="form-control radio-label" aria-label="Text  with radio button">{{price.title}}</label>
             </div>
 
-            <div class="input-group check-box-div">
+            <div class="input-group check-box-div" v-if="loggedUser">
               <div class="input-group-text ">
                 <input       
-                  @input="handleGetUsersAdvertisements()"
+                  @input="handleFilters({showUsersAdvertisements: !showUsersAdvertisements})"
                   class="form-check-input" 
                   id="user-checkbox" 
                   type="checkbox" 
@@ -66,10 +66,6 @@
                 >
               </div>
                 <label for="user-checkbox" type="text" class="form-control radio-label" aria-label="Text  with radio button">Show mine only</label>
-                <div v-if="!isLogged && showUsersAdvertisements" class="errors" style="width: 182px; height:25px;">
-                  <p>{{this.error}}</p>
-                </div>
-                <div v-else></div>
             </div>
         </div>
 
@@ -87,7 +83,7 @@
             <p>City</p><p class="card-text">{{advertisement.city}}</p>
             <p>Category</p><p class="card-text">{{advertisement.category}}</p>
             <!--- ovde puca id-->
-            <div v-if="loggedUser && loggedUser.id === advertisement.user_id" class="buttons">
+            <div v-if="isLogged && loggedUser.id === advertisement.user_id" class="buttons">
               <router-link class="btn btn-warning" :to="{name: 'advertisement', params:{ id: advertisement.id}}">Show Advertisement</router-link> 
               <button class="btn btn-warning">edit</button>
               <button class="btn btn-danger">delete</button>
@@ -140,12 +136,12 @@ export default {
         },
         searchByTitle: '',
         prices: {
-          min: {id: 0,title:'Min'},
-          max: {id: 1,title:'Max'}
+          min: {id: 0,title:'Min', value: 'ASC'},
+          max: {id: 1,title:'Max', value: 'DESC'}
         },
         price: '',
         showUsersAdvertisements: false,
-        error: ''
+
       }
     },
 
@@ -158,7 +154,10 @@ export default {
         isLogged: 'authModule/isLogged', 
         currentPage: 'advertisementsModule/currentPage', 
         lastPage: 'advertisementsModule/lastPage',
-        links: 'advertisementsModule/links'
+        links: 'advertisementsModule/links',
+        filterAdvertisements: 'advertisementsModule/filterAdvertisements',
+        showUsersAdverts: 'advertisementsModule/showUsersAdverts'
+       
       })
     },
     methods: {
@@ -166,7 +165,8 @@ export default {
         getAdvertisements: 'advertisementsModule/getAdvertisements', 
         getAdvertisementsByUserName: 'advertisementsModule/getAdvertisementsByUserName',
         getUsersAdvertisements: 'usersModule/getUsersAdvertisements',
-        deleteUsersAdvertisements: 'usersModule/deleteUsersAdvertisements'
+        deleteUsersAdvertisements: 'usersModule/deleteUsersAdvertisements',
+         filterAdverts: 'advertisementsModule/filterAdverts'
       }),
       handlePaginationNext(currentPage){
         if(currentPage !== this.lastPage){
@@ -184,24 +184,25 @@ export default {
           this.price = payload.price ? payload.price : this.price
           this.getAdvertisements({nextPage: payload.nextPage, searchByPrice: this.price})
       },
-      handleCategorySearch(category){
-        this.getAdvertisements({nextPage: this.currentPage, category: category === 'None' ? '' : category})
-      },
-      handleSearchByTitle(){
-        if(this.searchByTitle === ''){
-          this.getAdvertisements({nextPage: this.currentPage})
-        }else{
-          this.getAdvertisements({nextPage: this.currentPage, searchByTitle: this.searchByTitle})
-        }
-      },
-      handleSearchByPrice(price){
-        this.$route.params.price = price
-        this.getAdvertisements({nextPage: this.currentPage, searchByPrice: price})
-      },
-      async handleGetUsersAdvertisements(){
-        if(this.isLogged)await this.getUsersAdvertisements({nextPage: this.currentPage, usersAdvertisements: this.loggedUser.id, showUsersAdvertisements: !this.showUsersAdvertisements})
-        else if(!this.isLogged && !this.showUsersAdvertisements)this.error = 'you are not logged in'
-        else if(!this.isLogged && this.showUsersAdvertisements)this.error = ''
+
+      async handleFilters(payload){
+        console.log(payload.priceOrder);
+        const CATEGORY = payload.category
+        const TITLE = payload.title !== '' ? payload.title : null
+        const PRICE_ORDER = payload.priceOrder
+
+        let listUserAdvertisements = payload.showUsersAdvertisements // this is for false boolean
+        if(payload.showUsersAdvertisements)listUserAdvertisements = payload.showUsersAdvertisements
+        else if(payload.showUsersAdvertisements === undefined)listUserAdvertisements = this.showUsersAdverts
+        const USER_ID = this.loggedUser && listUserAdvertisements ? this.loggedUser.id : null
+
+        await this.filterAdverts({
+          category: CATEGORY, 
+          title: TITLE, priceOrder: PRICE_ORDER, 
+          userId: USER_ID, 
+          showUsersAdvertisements: listUserAdvertisements
+        })
+
       }
     },
     async beforeRouteEnter(to, from, next) {

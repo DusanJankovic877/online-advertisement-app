@@ -11,12 +11,13 @@
             <p class="card-text"><b>Price: </b>{{advertisement.price}} &#8364;</p>
             <p class="card-text"><b>City: </b>{{advertisement.city}}</p>
             <p class="card-text"><b>Category: </b>{{advertisement.category}}</p>
+            <p class="card-text"><b>Created: </b>{{formattedAdvertisementTime}}</p>
           </div>
 
           <div class="user">
             <p class="card-text"><b>User name: </b>{{loggedUser.name}}</p>
             <p class="card-text"><b>Telephone: </b>{{loggedUser.telephone}}</p>
-            <p class="card-text"><b>Registered: </b>{{formatted}}</p>
+            <p class="card-text"><b>Registered: </b>{{formattedUserTime}}</p>
           </div>
         </div>
         <div class="buttons">
@@ -39,8 +40,11 @@ export default {
           advertisement: 'advertisementsModule/advertisement',
           loggedUser: 'authModule/loggedUser'
         }),
-        formatted(){
+        formattedUserTime(){
           return moment().format('MMMM Do YYYY, h:mm:ss a', this.loggedUser.created_at);
+        },
+        formattedAdvertisementTime(){
+          return moment().format('MMMM Do YYYY, h:mm:ss a', this.advertisement.created_at);
         }
     },
     methods:{

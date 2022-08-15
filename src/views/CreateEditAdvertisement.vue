@@ -1,6 +1,7 @@
 <template>
   <div class="container edit-create" v-if="advertisementToUse">
     <h1>{{heading}}</h1>
+    {{this.$route.params.id}}
     <form @submit.prevent>
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
@@ -80,10 +81,19 @@ export default {
     ...mapActions({getCreateEditAdvertisement: 'advertisementsModule/getCreateEditAdvertisement'}),
 
     async handleSubmit(){
-      if(this.heading === 'Create Advertisement')this.advertisementToUse.user_id = this.loggedUser.id
+      if(this.heading === 'Create Advertisement'){
+        this.advertisementToUse.user_id = this.loggedUser.id; 
+      }
       await this.getCreateEditAdvertisement({advertisement: this.advertisementToUse, heading: this.heading})
-      if(this.advertisement)this.$router.push({name: 'advertisement', params: { id: this.advertisement.id}});
-      else this.$router.push({name: 'home'});
+      // this.$router.push()
+      // if(this.heading === 'Create Advertisement'){
+      //   this.advertisementToUse.user_id = this.loggedUser.id; 
+      //   console.log('create');
+      //   }
+      // await this.getCreateEditAdvertisement({advertisement: this.advertisementToUse, heading: this.heading})
+      // if(this.advertisement){this.$router.push({name: 'advertisement', params: { id: this.advertisement.id}});
+      // console.log('asdassdsd');
+      // }else this.$router.push({name: 'home'});
     },
     goBack(){
       if(this.advertisement)this.$router.push({name: 'advertisement', params: { id: this.advertisement.id}});
