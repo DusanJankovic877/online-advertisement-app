@@ -186,7 +186,6 @@ export default {
       },
 
       async handleFilters(payload){
-        console.log(payload.priceOrder);
         const CATEGORY = payload.category
         const TITLE = payload.title !== '' ? payload.title : null
         const PRICE_ORDER = payload.priceOrder
