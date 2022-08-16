@@ -24,7 +24,7 @@
         </div>
         <div class="buttons">
           <router-link class="btn btn-warning edit-btn" :to="{name: 'create-edit-advertisement', params:{ id: advertisement.id}}">edit</router-link> 
-          <button class="btn btn-danger delete-btn">delete</button>
+          <button class="btn btn-danger delete-btn" @click="handleDeleteAdvertisement(advertisement.id)">delete</button>
         </div>
       </div>
     </div>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import {  mapGetters } from 'vuex'
+import {  mapGetters, mapActions } from 'vuex'
 // import { Vue } from 'vue'
 import store from '../store';
 import moment from 'moment'
@@ -41,7 +41,8 @@ export default {
         ...mapGetters({
           advertisement: 'advertisementsModule/advertisement',
           loggedUser: 'authModule/loggedUser',
-          message: 'errorsModule/message'
+          message: 'errorsModule/message',
+          currentPage: 'advertisementsModule/currentPage',
         }),
         formattedUserTime(){
           return moment().format('MMMM Do YYYY, h:mm:ss a', this.loggedUser.created_at);
@@ -51,7 +52,14 @@ export default {
         }
     },
     methods:{
+      ...mapActions({
+        deleteAvertisement: 'advertisementsModule/deleteAvertisement'
+      }),
 
+      async handleDeleteAdvertisement(id){
+        await this.deleteAvertisement({currentPage: this.currentPage, id: id})
+        this.$router.push({name: 'home'})
+      },
     },
     async created(){
         await store.dispatch('advertisementsModule/getAdvertisement', this.$route.params.id)

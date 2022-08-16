@@ -36,6 +36,7 @@ const errorsModule = {
         DELETE_MESSAGE(state){
             state.message = null
         }
+        
     },
     actions:{
         /**
@@ -69,6 +70,7 @@ const errorsModule = {
         },
         deleteMessage({ commit }){
             commit('DELETE_MESSAGE')
+            console.log('deletes');
         }
     },
     getters:{

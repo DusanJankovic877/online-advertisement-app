@@ -79,14 +79,16 @@ const advertisementModule = {
         async getCreateEditAdvertisement( {commit} , payload){
           
             if(payload.heading === 'Edit Advertisement'){
-                // console.log('Edit Advertisement');
                 const ADVERTISEMENT = await advertisementServices.editAdvertisement(payload.advertisement)
                 commit('SET_ADVERTISEMENT', ADVERTISEMENT.data.advertisement)
             }
             else if(payload.heading === 'Create Advertisement'){
                 await advertisementServices.createAdvertisement(payload.advertisement)
-                // console.log('CREATED_ADVERTISEMENT', CREATED_ADVERTISEMENT.data.advertisement);
             }
+        },
+        async deleteAvertisement( {dispatch } , payload){
+            await advertisementServices.deleteAvertisement(payload.id)
+            dispatch('getAdvertisements', {nextPage: payload.currentPage})
         }
         
     },

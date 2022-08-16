@@ -43,14 +43,12 @@ export class RequestHandler {
                   
             return config;
         });
-        this.apiClient.interceptors.response.use( async response => {
+        this.apiClient.interceptors.response.use(  response => {
             // await delay(3000);
             // store.dispatch('doneLoading')
-            if(response.status === 200 && response.data.message){
-                console.log(response.data.message);
-                await store.dispatch('errorsModule/setMessage', response.data.message)
+            if(response.status === 200 ){
+                if(response.data.message)store.dispatch('errorsModule/setMessage', response.data.message)  
             }
-            // if(response)
             return response;
 
         }, async error => {

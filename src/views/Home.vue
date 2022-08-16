@@ -85,10 +85,10 @@
             <p>City</p><p class="card-text">{{advertisement.city}}</p>
             <p>Category</p><p class="card-text">{{advertisement.category}}</p>
             <!--- ovde puca id-->
-            <div v-if="isLogged && loggedUser.id === advertisement.user_id" class="buttons">
-              <router-link class="btn btn-warning" :to="{name: 'advertisement', params:{ id: advertisement.id}}">Show Advertisement</router-link> 
-              <button class="btn btn-warning">edit</button>
-              <button class="btn btn-danger">delete</button>
+            <div v-if="isLogged && loggedUser.id === advertisement.user_id" class="buttons flex-buttons">
+              <router-link class="btn btn-warning" :to="{name: 'advertisement', params:{ id: advertisement.id}}">View</router-link> 
+                    <button class="btn btn-secondary" @click="handleDeleteAdvertisement(advertisement.id)">Delete</button>
+
             </div>
            <div v-else></div>
           </div>
@@ -105,7 +105,6 @@
           >
           <a :class="link.active ? 'active' : '' " href="#" @click="handleSelectPage({nextPage: link.label, price: $route.params.price})">{{link.label}}</a></span>
       </div>
-      <button class="btn btn-secondary paginate-next" @click="handlePaginationNext(currentPage)">Next</button>
     </div>
 
     <!-- <AvertisementCard  :advertisement="advertisement"/> -->
@@ -164,12 +163,14 @@ export default {
       })
     },
     methods: {
+
       ...mapActions({
         getAdvertisements: 'advertisementsModule/getAdvertisements', 
         getAdvertisementsByUserName: 'advertisementsModule/getAdvertisementsByUserName',
         getUsersAdvertisements: 'usersModule/getUsersAdvertisements',
         deleteUsersAdvertisements: 'usersModule/deleteUsersAdvertisements',
-         filterAdverts: 'advertisementsModule/filterAdverts'
+        filterAdverts: 'advertisementsModule/filterAdverts',
+        deleteAvertisement: 'advertisementsModule/deleteAvertisement'
       }),
       async handleFilters(payload){
 
@@ -196,8 +197,13 @@ export default {
           page: nextPage
         })
 
-      }
+      },
+    async handleDeleteAdvertisement(id){
+      await this.deleteAvertisement({currentPage: this.currentPage, id: id})
+      this.$router.push({name: 'home'})
     },
+    },
+
     async beforeRouteEnter(to, from, next) {
         await store.dispatch("advertisementsModule/getAdvertisements", {nextPage: 1, category: ''});
         next();
@@ -321,6 +327,9 @@ span{
   margin: 0 !important;
   padding: 0 !important;
 
+}
+.flex-buttons{
+  display: flex;
 }
 
 </style>

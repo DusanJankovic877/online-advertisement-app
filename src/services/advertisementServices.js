@@ -13,11 +13,14 @@ class AdvertisementServices extends RequestHandler {
         return await this.apiClient.post('get-advertisement', {id: id})
     }
     async editAdvertisement(advertisement){
-        return await this.apiClient.post('edit-advertisement', advertisement)
+        return await this.apiClient.put('edit-advertisement', advertisement)
     }
     async createAdvertisement(advertisement){
         await this.apiClient.post('create-advertisement', advertisement)
        
+    }
+    async deleteAvertisement(id){
+        await this.apiClient.delete(`delete-advertisement/${id}`)
     }
 
 }

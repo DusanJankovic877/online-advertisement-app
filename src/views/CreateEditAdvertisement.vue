@@ -91,13 +91,20 @@ export default {
     }
   },
   computed:{
-    ...mapGetters({advertisement: 'advertisementsModule/advertisement', authErrors: 'errorsModule/authErrors', loggedUser: 'authModule/loggedUser'}),
+    ...mapGetters({
+        advertisement: 'advertisementsModule/advertisement', 
+        authErrors: 'errorsModule/authErrors', 
+        loggedUser: 'authModule/loggedUser'
+
+        }),
     advertisementToUse(){
       return this.$route.params.id ? this.advertisement : this.advertisementForm
     }
   },
   methods:{
-    ...mapActions({getCreateEditAdvertisement: 'advertisementsModule/getCreateEditAdvertisement'}),
+    ...mapActions({
+      getCreateEditAdvertisement: 'advertisementsModule/getCreateEditAdvertisement'
+    }),
 
     async handleSubmit(){
       if(this.heading === 'Create Advertisement'){
