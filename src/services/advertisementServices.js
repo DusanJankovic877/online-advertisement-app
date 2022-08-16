@@ -6,7 +6,8 @@ class AdvertisementServices extends RequestHandler {
         return await this.apiClient.get(`get-advertisements?page=${payload.nextPage}`)
     }
     async filterAvertisements(payload){
-       return await this.apiClient.get(`filter-adverts?page=1&category=${payload.category}&title=${payload.title}&priceOrder=${payload.priceOrder}&userId=${payload.userId}`)
+        console.log('payload', payload);
+       return await this.apiClient.get(`filter-adverts?page=${payload.page}&category=${payload.category}&title=${payload.title}&priceOrder=${payload.priceOrder}&userId=${payload.userId}`)
     }
     async getAdvertisement(id){
         return await this.apiClient.post('get-advertisement', {id: id})

@@ -1,18 +1,18 @@
 <template>
   <div class="home">
- 
     <div class="pagination">
-
-      <button class="btn btn-secondary paginate-prev" @click="handlePaginationPrev(currentPage)">Prev</button>
+      
+      <button class="btn btn-secondary paginate-prev" @click="handleFilters({prevPage: currentPage})">Prev</button>
       <div class="links">
         <span 
           v-for="link in links" 
           :key="link.id" 
           >
-          <a :class="link.active ? 'active' : '' " href="#" @click="handleSelectPage({nextPage: link.label, price: $route.params.price})">{{link.label}}</a></span>
+          <a :class="link.active ? 'active' : '' " href="#" @click="handleFilters({showPage: link.label})">{{link.label}}</a></span>
       </div>
-      <button class="btn btn-secondary paginate-next" @click="handlePaginationNext(currentPage)">Next</button>
+      <button class="btn btn-secondary paginate-next" @click="handleFilters({nextPage: currentPage})">Next</button>
     </div>
+  
    
     <div class="filters container">
       <div class="price-sort">
@@ -29,7 +29,7 @@
           <p>Show users articles</p>
         </div>
       </div>
-
+      {{lastPage}}{{currentPage}}
       <div class="price-sort">
         <div class="dropdown col-lg-1">
           <button class="btn category-button dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -168,24 +168,13 @@ export default {
         deleteUsersAdvertisements: 'usersModule/deleteUsersAdvertisements',
          filterAdverts: 'advertisementsModule/filterAdverts'
       }),
-      handlePaginationNext(currentPage){
-        if(currentPage !== this.lastPage){
-          var nextPage = currentPage + 1
-          this.getAdvertisements({nextPage: nextPage, searchByPrice: this.$route.params.price})
-        }
-      },
-      handlePaginationPrev(currentPage){
-        if(currentPage !== 1){
-          var prevPage = currentPage - 1
-          this.getAdvertisements({nextPage: prevPage})
-        }
-      },
-      handleSelectPage(payload){
-          this.price = payload.price ? payload.price : this.price
-          this.getAdvertisements({nextPage: payload.nextPage, searchByPrice: this.price})
-      },
-
       async handleFilters(payload){
+
+        let nextPage = this.currentPage
+        if(payload.nextPage && this.currentPage !== this.lastPage)nextPage = payload.nextPage + 1
+        else if(payload.prevPage && this.currentPage !== 1)nextPage = payload.prevPage - 1
+        if(payload.showPage)nextPage = payload.showPage
+
         const CATEGORY = payload.category
         const TITLE = payload.title !== '' ? payload.title : null
         const PRICE_ORDER = payload.priceOrder
@@ -197,9 +186,11 @@ export default {
 
         await this.filterAdverts({
           category: CATEGORY, 
-          title: TITLE, priceOrder: PRICE_ORDER, 
+          title: TITLE, 
+          priceOrder: PRICE_ORDER, 
           userId: USER_ID, 
-          showUsersAdvertisements: listUserAdvertisements
+          showUsersAdvertisements: listUserAdvertisements,
+          page: nextPage
         })
 
       }
