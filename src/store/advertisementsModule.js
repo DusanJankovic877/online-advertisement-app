@@ -85,6 +85,7 @@ const advertisementModule = {
             }
             else if(payload.heading === 'Create Advertisement'){
                 await advertisementServices.createAdvertisement(payload.advertisement)
+                // console.log('CREATED_ADVERTISEMENT', CREATED_ADVERTISEMENT.data.advertisement);
             }
         }
         

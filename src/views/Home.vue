@@ -29,7 +29,7 @@
           <p>Show users articles</p>
         </div>
       </div>
-      {{lastPage}}{{currentPage}}
+
       <div class="price-sort">
         <div class="dropdown col-lg-1">
           <button class="btn category-button dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -71,8 +71,10 @@
 
       </div><!--  end of row-->
     </div><!--  end of filters container -->
-   
     <div class="col-lg-10 m-auto cards">
+      <div class="message-success">
+        <p><b>{{message}}</b></p>
+      </div>
       <div class="row">
         <div class="card col-lg-2" v-for="advertisement in advertisements" :key="advertisement.id">
           <img :src="advertisement.image_url" class="card-img-top" alt="picture">
@@ -156,7 +158,8 @@ export default {
         lastPage: 'advertisementsModule/lastPage',
         links: 'advertisementsModule/links',
         filterAdvertisements: 'advertisementsModule/filterAdvertisements',
-        showUsersAdverts: 'advertisementsModule/showUsersAdverts'
+        showUsersAdverts: 'advertisementsModule/showUsersAdverts',
+        message: 'errorsModule/message'
        
       })
     },
@@ -198,7 +201,10 @@ export default {
     async beforeRouteEnter(to, from, next) {
         await store.dispatch("advertisementsModule/getAdvertisements", {nextPage: 1, category: ''});
         next();
-    }
+    },
+    beforeUnmount() {
+      store.dispatch('errorsModule/deleteMessage')
+    },
 }
 </script>
 <style scoped>
@@ -316,4 +322,5 @@ span{
   padding: 0 !important;
 
 }
+
 </style>

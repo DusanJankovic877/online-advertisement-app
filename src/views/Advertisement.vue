@@ -1,6 +1,8 @@
 <template>
-  <div class="single-advertisement" v-if="advertisement">
-
+  <div class="single-advertisement container" v-if="advertisement">
+        <div class="message-success">
+          <p><b>{{message}}</b></p>
+        </div>
     <div class="card container advertisement-container-card">
       <div class="card-body">
         <img :src="advertisement.image_url" class="card-img-top" alt="picture">
@@ -38,7 +40,8 @@ export default {
     computed:{
         ...mapGetters({
           advertisement: 'advertisementsModule/advertisement',
-          loggedUser: 'authModule/loggedUser'
+          loggedUser: 'authModule/loggedUser',
+          message: 'errorsModule/message'
         }),
         formattedUserTime(){
           return moment().format('MMMM Do YYYY, h:mm:ss a', this.loggedUser.created_at);
@@ -52,7 +55,10 @@ export default {
     },
     async created(){
         await store.dispatch('advertisementsModule/getAdvertisement', this.$route.params.id)
-    }
+    },
+    beforeUnmount() {
+      store.dispatch('errorsModule/deleteMessage')
+    },
 }
 </script>
 

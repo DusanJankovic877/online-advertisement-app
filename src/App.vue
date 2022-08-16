@@ -32,4 +32,8 @@ export default {
 input, button, a{
   border-radius: 0 !important;
 }
+.message-success{
+  background-color: rgba(108, 192, 108, 0.719);
+  color: rgba(8, 97, 8, 0.781);
+}
 </style>

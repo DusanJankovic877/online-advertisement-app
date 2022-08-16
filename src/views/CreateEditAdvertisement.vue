@@ -41,7 +41,7 @@
           <div class="mb-3">
             <label for="category" class="form-label">Category</label>
           <div class="input-group ">
-            <select class="form-select" id="inputGroupSelect01">
+            <select class="form-select" id="inputGroupSelect01" v-model="advertisementToUse.category">
               <option 
                 :selected="advertisementToUse.category === category ? true : false" 
                 :value="category" 
@@ -102,8 +102,10 @@ export default {
     async handleSubmit(){
       if(this.heading === 'Create Advertisement'){
         this.advertisementToUse.user_id = this.loggedUser.id; 
+        await this.getCreateEditAdvertisement({advertisement: this.advertisementToUse, heading: this.heading})
         this.$router.push({name: 'home'});
       }else if(this.heading === 'Edit Advertisement'){
+        console.log(this.advertisementToUse);
         await this.getCreateEditAdvertisement({advertisement: this.advertisementToUse, heading: this.heading})
         this.$router.push({name: 'advertisement', params: { id: this.advertisement.id}})
       }
