@@ -1,5 +1,4 @@
 import advertisementServices from '../services/advertisementServices'
-// import { upsert } from '@/helpers'
 const advertisementModule = {
     namespaced: true,
     state:{

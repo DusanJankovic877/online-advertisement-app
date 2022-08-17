@@ -19,15 +19,18 @@ const props = defineProps({
 </script> -->
 <script>
 export default {
-
-  // emits:['handle-filters'],
+  /**
+   * Passed properties from Parent
+   */
   props: {
     links: Object,
     currentPage: Number
   },
   methods: {
+    /**
+     * Passed properties from Parent
+     */
     handleFilters(payload){
-
       this.$emit('handle-filters', payload)
     }
   }

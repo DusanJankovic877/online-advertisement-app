@@ -52,9 +52,6 @@ export default {
     },
 
     computed: {
-      advertisements(){
-        return this.$store.state.advertisementsModule.advertisements
-      },
       ...mapGetters({
         loggedUser: 'authModule/loggedUser', 
         isLogged: 'authModule/isLogged', 
@@ -63,7 +60,8 @@ export default {
         links: 'advertisementsModule/links',
         filterAdvertisements: 'advertisementsModule/filterAdvertisements',
         showUsersAdverts: 'advertisementsModule/showUsersAdverts',
-        message: 'errorsModule/message'
+        message: 'errorsModule/message',
+        advertisements: 'advertisementsModule/advertisements'
        
       })
     },
@@ -77,8 +75,18 @@ export default {
         filterAdverts: 'advertisementsModule/filterAdverts',
         deleteAvertisement: 'advertisementsModule/deleteAvertisement'
       }),
+      /**
+       * Handling filter parameters
+       * I am cycling through the data Object params and params that are passed through method, 
+       * and data from state getters
+       * If some data becomes null or empty string because some other filter is activated,
+       * I am getting data from state object where last input was saved and ading it 
+       * Then i am saving data to contats and sending them to store method filterAdverts()
+       * 
+       * @param {Object} payload 
+       * @param {Method} filterAdverts 
+       */
       async handleFilters(payload){
-
         let nextPage = this.currentPage
         if(payload.nextPage && this.currentPage !== this.lastPage)nextPage = payload.nextPage + 1
         else if(payload.prevPage && this.currentPage !== 1)nextPage = payload.prevPage - 1
@@ -103,16 +111,31 @@ export default {
         })
 
       },
-    async handleDeleteAdvertisement(id){
-      await this.deleteAvertisement({currentPage: this.currentPage, id: id})
-      this.$router.push({name: 'home'})
+      /**
+       * I am sending id and current page to store method deleteAvertisement()
+       * @param {Number} id 
+       * @param {Number} currentPage 
+       * @param {Method} deleteAvertisement 
+       */
+      async handleDeleteAdvertisement(id){
+        await this.deleteAvertisement({currentPage: this.currentPage, id: id})
+        this.$router.push({name: 'home'})
+      },
     },
-    },
-
+    /**
+     * Before route is entered i am dispatching action getAdvertisements() in store
+     * to get advertisements
+     * @param {Object} to 
+     * @param {Object} from 
+     * @param {Method} next 
+     */
     async beforeRouteEnter(to, from, next) {
         await store.dispatch("advertisementsModule/getAdvertisements", {nextPage: 1, category: ''});
         next();
     },
+    /**
+     * Before view is un mounted I am dispatching action deleteMessage() to delete message
+     */
     beforeUnmount() {
       store.dispatch('errorsModule/deleteMessage')
     },

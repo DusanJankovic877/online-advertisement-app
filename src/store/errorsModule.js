@@ -43,6 +43,8 @@ const errorsModule = {
          */
         SET_MESSAGE(state, message){
             state.message = message
+            setTimeout(function(){state.message = ''}, 2000); 
+            
         },
                 /**
          * Delete message in state Object

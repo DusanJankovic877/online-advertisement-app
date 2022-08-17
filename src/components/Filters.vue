@@ -66,12 +66,18 @@ export default {
             showUsersAdvertisements: false
         }
     },
+    /**
+   * Passed properties from Parent
+   */
   props: {
     loggedUser:Object, 
     categories: Object,
     prices: Object
   },
   methods: {
+    /**
+   * Passed properties from Parent
+   */
     handleFilters(payload){
       this.$emit('handle-filters', payload)
     }

@@ -99,6 +99,7 @@ const authModule = {
            if(RESPONSE.data.message === 'Successfully logged out' && RESPONSE.status === 200){
                 commit('RESET_USER')
                 commit('RESET_TOKEN')
+                commit('errorsModule/SET_MESSAGE', RESPONSE.data.message, { root: true })
                 localStorage.removeItem('token')
            }
 

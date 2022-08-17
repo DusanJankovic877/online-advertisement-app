@@ -27,6 +27,9 @@
 
 <script>
 export default {
+  /**
+   * Passed properties from Parent
+   */
 props:{
   message: String,
   advertisements: Object,

@@ -127,7 +127,7 @@ export default {
 
   },
   async beforeUnmount(){
-    store.dispatch('errorsModule/deleteAuthErrors', this.$route.params.id);
+    // store.dispatch('errorsModule/deleteAuthErrors', this.$route.params.id);
   }
 
 
