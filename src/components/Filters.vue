@@ -21,7 +21,8 @@
             Category
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li v-for="category in categories" :key="category.id" @click="handleFilters({category: category})"><p>{{category}}</p></li>
+            <li @click="handleFilters({category: 'None'})"><p>None</p></li>
+            <li v-for="category in categories" :key="category.id" @click="handleFilters({category: category.id})"><p>{{category.title}}</p></li>
           </ul>
         </div>
 

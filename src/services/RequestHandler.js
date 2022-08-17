@@ -52,9 +52,11 @@ export class RequestHandler {
             return response;
 
         }, async error => {
+            console.log(error.response);
             if (error.response.status === 422) {
                 // console.log(error.response);
                 if (error.response.data.errors) {
+
                     await store.dispatch('errorsModule/setAuthErrors', error.response.data.errors)
                     return Promise.resolve();
                 }

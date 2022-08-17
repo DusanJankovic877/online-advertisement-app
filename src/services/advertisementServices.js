@@ -39,7 +39,6 @@ class AdvertisementServices extends RequestHandler {
      */
     async createAdvertisement(advertisement){
         await this.apiClient.post('create-advertisement', advertisement)
-       
     }
     /**
      * Sending id for n advertisement to be deleted

@@ -1,6 +1,7 @@
 <template>
   <div class="container edit-create" v-if="advertisementToUse">
     <h1>{{heading}}</h1>
+    
     <form @submit.prevent>
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
@@ -40,18 +41,23 @@
           </div>
           <div class="mb-3">
             <label for="category" class="form-label">Category</label>
-          <div class="input-group ">
-            <select class="form-select" id="inputGroupSelect01" v-model="advertisementToUse.category">
-              <option 
-                :selected="advertisementToUse.category === category ? true : false" 
-                :value="category" 
-                v-for="category in categories" 
-                :key="category.id"
-              >
-                {{category}}
-              </option>
-            </select>
-          </div>
+            <div class="input-group ">
+
+              <select class="form-select" id="inputGroupSelect01" v-model="advertisementToUse.category">
+
+                <option  
+                  :value="category.id" 
+                  v-for="category in categories" 
+                  :key="category.id"
+                >
+                  {{category.title}}
+                </option>
+                
+              </select>
+            </div>
+            <div class="errors">
+                <p v-for="error in authErrors.category " :key="error.id">{{error}}</p>
+            </div>
           </div>
           <div class="edit-create-buttons">
             <button class="btn btn-success" style="float:left;" @click="handleSubmit()">Submit</button>
@@ -75,18 +81,8 @@ export default {
         city: '',
         category: ''
       },
-      categories: {
-          default: 'Choose...',
-          clothing: 'Clothing',
-          tools: 'Tools',
-          sports: 'Sports',
-          accessories: 'Accessories',
-          furniture: 'Furniture',
-          pets: 'Pets',
-          games: 'Games',
-          books: 'Books'
-      },
-      roteParam: '',
+
+      defaultOption: 'Choose...',
       heading: this.$route.params.id ? 'Edit Advertisement' : 'Create Advertisement'
     }
   },
@@ -94,7 +90,10 @@ export default {
     ...mapGetters({
         advertisement: 'advertisementsModule/advertisement', 
         authErrors: 'errorsModule/authErrors', 
-        loggedUser: 'authModule/loggedUser'
+        message: 'errorsModule/message', 
+        loggedUser: 'authModule/loggedUser',
+        categories: 'categoriesModule/categories',
+
 
         }),
     advertisementToUse(){
@@ -110,7 +109,7 @@ export default {
       if(this.heading === 'Create Advertisement'){
         this.advertisementToUse.user_id = this.loggedUser.id; 
         await this.getCreateEditAdvertisement({advertisement: this.advertisementToUse, heading: this.heading})
-        this.$router.push({name: 'home'});
+        if(this.message)this.$router.push({name: 'home'});
       }else if(this.heading === 'Edit Advertisement'){
         console.log(this.advertisementToUse);
         await this.getCreateEditAdvertisement({advertisement: this.advertisementToUse, heading: this.heading})
@@ -124,11 +123,12 @@ export default {
   },
   async created(){
     if(this.$route.params.id)await store.dispatch('advertisementsModule/getAdvertisement', this.$route.params.id);
-
+    store.dispatch('categoriesModule/getCategories');
   },
-  async beforeUnmount(){
-    // store.dispatch('errorsModule/deleteAuthErrors', this.$route.params.id);
+  beforeUnmount(){
+    store.dispatch('errorsModule/deleteAuthErrors');
   }
+
 
 
 }

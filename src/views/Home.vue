@@ -5,9 +5,10 @@
       :loggedUser="loggedUser" 
       :categories="categories" 
       :prices="prices"
+      :selectedCategory="selectedCategory"
       @handle-filters="handleFilters"
     />
-    <AvertisementCard  :advertisements="advertisements" :loggedUser="loggedUser" :isLogged="isLogged" :message="message"/>
+    <AvertisementCard  :advertisements="advertisements" :loggedUser="loggedUser" :categories="categories" :isLogged="isLogged" :message="message"/>
     <pagination :currentPage="currentPage" :links="links" @handle-filters="handleFilters"/>
 
   </div>
@@ -29,18 +30,8 @@ export default {
     },
     data(){
       return{
-        categories:{
-          clothing: 'Clothing',
-          tools: 'Tools',
-          sports: 'Sports',
-          accessories: 'Accessories',
-          furniture: 'Furniture',
-          pets: 'Pets',
-          games: 'Games',
-          books: 'Books',
-          none: 'None'
-        },
         searchByTitle: '',
+        selectedCategory: '',
         prices: {
           min: {id: 0,title:'Min', value: 'ASC'},
           max: {id: 1,title:'Max', value: 'DESC'}
@@ -61,7 +52,9 @@ export default {
         filterAdvertisements: 'advertisementsModule/filterAdvertisements',
         showUsersAdverts: 'advertisementsModule/showUsersAdverts',
         message: 'errorsModule/message',
-        advertisements: 'advertisementsModule/advertisements'
+        advertisements: 'advertisementsModule/advertisements',
+        categories: 'categoriesModule/categories',
+
        
       })
     },
@@ -93,6 +86,7 @@ export default {
         if(payload.showPage)nextPage = payload.showPage
 
         const CATEGORY = payload.category
+        this.selectedCategory = CATEGORY
         const TITLE = payload.title !== '' ? payload.title : null
         const PRICE_ORDER = payload.priceOrder
 
@@ -131,6 +125,7 @@ export default {
      */
     async beforeRouteEnter(to, from, next) {
         await store.dispatch("advertisementsModule/getAdvertisements", {nextPage: 1, category: ''});
+        store.dispatch('categoriesModule/getCategories');
         next();
     },
     /**

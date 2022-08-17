@@ -1,9 +1,11 @@
 <template>
   <div class="single-advertisement container" v-if="advertisement">
         <div class="message-success">
+    
           <p><b>{{message}}</b></p>
         </div>
     <div class="card container advertisement-container-card">
+      <!-- {{advertisement.category.title}} -->
       <div class="card-body">
         <img :src="advertisement.image_url" class="card-img-top" alt="picture">
         <div class="card-body advertisement-body">
@@ -12,7 +14,7 @@
             <p class="card-text"><b>Description: </b>{{advertisement.description}}</p>
             <p class="card-text"><b>Price: </b>{{advertisement.price}} &#8364;</p>
             <p class="card-text"><b>City: </b>{{advertisement.city}}</p>
-            <p class="card-text"><b>Category: </b>{{advertisement.category}}</p>
+            <p class="card-text"><b>Category: </b>{{advertisement.category.title}}</p>
             <p class="card-text"><b>Created: </b>{{formattedAdvertisementTime}}</p>
           </div>
 
@@ -23,8 +25,9 @@
           </div>
         </div>
         <div class="buttons">
-          <router-link class="btn btn-warning edit-btn" :to="{name: 'create-edit-advertisement', params:{ id: advertisement.id}}">edit</router-link> 
+          <router-link class="btn btn-success edit-btn" :to="{name: 'create-edit-advertisement', params:{ id: advertisement.id}}">edit</router-link> 
           <button class="btn btn-danger delete-btn" @click="handleDeleteAdvertisement(advertisement.id)">delete</button>
+          <router-link class="btn btn-warning go-back-btn" :to="{name: 'home'}">Go Back</router-link> 
         </div>
       </div>
     </div>
@@ -33,9 +36,9 @@
 
 <script>
 import {  mapGetters, mapActions } from 'vuex'
+import { formatTime } from '../helpers/index'
 // import { Vue } from 'vue'
 import store from '../store';
-import moment from 'moment'
 export default {
     computed:{
         ...mapGetters({
@@ -45,10 +48,10 @@ export default {
           currentPage: 'advertisementsModule/currentPage',
         }),
         formattedUserTime(){
-          return moment().format('MMMM Do YYYY, h:mm:ss a', this.loggedUser.created_at);
+          return formatTime(this.loggedUser.created_at)
         },
         formattedAdvertisementTime(){
-          return moment().format('MMMM Do YYYY, h:mm:ss a', this.advertisement.created_at);
+          return formatTime(this.advertisement.created_at);
         }
     },
     methods:{
@@ -91,16 +94,20 @@ export default {
   width:50%;
 }
 .buttons{
+  display: flex;
   margin: 0 auto;
   width:50%;
 
 }
 .edit-btn{
-  float: left;
-
+  /* float: left; */
+  margin: 0 auto !important;
 }
 .delete-btn{
-  float: right;
+  margin: 0 auto !important;
+  }
+.go-back-btn{
+  margin: 0 auto !important;
 
 }
 </style>
