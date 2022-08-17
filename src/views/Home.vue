@@ -1,126 +1,31 @@
 <template>
   <div class="home">
-    <div class="pagination">
-      
-      <button class="btn btn-secondary paginate-prev" @click="handleFilters({prevPage: currentPage})">Prev</button>
-      <div class="links">
-        <span 
-          v-for="link in links" 
-          :key="link.id" 
-          >
-          <a :class="link.active ? 'active' : '' " href="#" @click="handleFilters({showPage: link.label})">{{link.label}}</a></span>
-      </div>
-      <button class="btn btn-secondary paginate-next" @click="handleFilters({nextPage: currentPage})">Next</button>
-    </div>
-  
-   
-    <div class="filters container">
-      <div class="price-sort">
-        <div class="dropdown category-label">
-          <p>Sort by category</p>
-        </div>
-        <div class="col-lg-2 title-label">
-          <p>Sort by title</p>
-        </div>
-        <div class="price-label" >
-          <p>Sort by price</p>
-        </div>
-        <div class="check-box-div" v-if="loggedUser">
-          <p>Show users articles</p>
-        </div>
-      </div>
-
-      <div class="price-sort">
-        <div class="dropdown col-lg-1">
-          <button class="btn category-button dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-            Category
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li v-for="category in categories" :key="category.id" @click="handleFilters({category: category})"><p>{{category}}</p></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-2">
-          <div class="input-group title-input">
-            <input type="text" class="form-control" v-model="searchByTitle" @input="handleFilters({title: searchByTitle})" placeholder="Title" aria-label="title">
-          </div>
-          </div>
-
-        <div class="price-sort">
-            <div class="input-group radio-input-div min-radio-input" v-for="price in prices" :key="price.id">
-              <div class="input-group-text">
-                <input :id="'radio-input-'+price.id" class="form-check-input radio-input" @input="handleFilters({priceOrder: price.value})" name="price-sort" type="radio" :value="price.title" aria-label="Checkbox for following text input">
-              </div>
-              <label :for="'radio-input-'+price.id" type="text" class="form-control radio-label" aria-label="Text  with radio button">{{price.title}}</label>
-            </div>
-
-            <div class="input-group check-box-div" v-if="loggedUser">
-              <div class="input-group-text ">
-                <input       
-                  @input="handleFilters({showUsersAdvertisements: !showUsersAdvertisements})"
-                  class="form-check-input" 
-                  id="user-checkbox" 
-                  type="checkbox" 
-                  v-model="showUsersAdvertisements" 
-                  aria-label="Radio button for following text input"
-                >
-              </div>
-                <label for="user-checkbox" type="text" class="form-control radio-label" aria-label="Text  with radio button">Show mine only</label>
-            </div>
-        </div>
-
-      </div><!--  end of row-->
-    </div><!--  end of filters container -->
-    <div class="col-lg-10 m-auto cards">
-      <div class="message-success">
-        <p><b>{{message}}</b></p>
-      </div>
-      <div class="row">
-        <div class="card col-lg-2" v-for="advertisement in advertisements" :key="advertisement.id">
-          <img :src="advertisement.image_url" class="card-img-top" alt="picture">
-          <div class="card-body">
-            <h5></h5><h5 class="card-title">{{advertisement.title}}</h5>
-            <p>Description</p><p class="card-text">{{advertisement.description}}</p>
-            <p>Price</p><p class="card-text">{{advertisement.price}} &#8364;</p>
-            <p>City</p><p class="card-text">{{advertisement.city}}</p>
-            <p>Category</p><p class="card-text">{{advertisement.category}}</p>
-            <!--- ovde puca id-->
-            <div v-if="isLogged && loggedUser.id === advertisement.user_id" class="buttons flex-buttons">
-              <router-link class="btn btn-warning" :to="{name: 'advertisement', params:{ id: advertisement.id}}">View</router-link> 
-                    <button class="btn btn-secondary" @click="handleDeleteAdvertisement(advertisement.id)">Delete</button>
-
-            </div>
-           <div v-else></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="pagination">
-      <button class="btn btn-secondary paginate-prev" @click="handlePaginationPrev(currentPage)">Prev</button>
-      <div class="links">
-        <span 
-          v-for="link in links" 
-          :key="link.id" 
-          >
-          <a :class="link.active ? 'active' : '' " href="#" @click="handleSelectPage({nextPage: link.label, price: $route.params.price})">{{link.label}}</a></span>
-      </div>
-    </div>
-
-    <!-- <AvertisementCard  :advertisement="advertisement"/> -->
+    <pagination :currentPage="currentPage" :links="links" @handle-filters="handleFilters"/>
+    <filters 
+      :loggedUser="loggedUser" 
+      :categories="categories" 
+      :prices="prices"
+      @handle-filters="handleFilters"
+    />
+    <AvertisementCard  :advertisements="advertisements" :loggedUser="loggedUser" :isLogged="isLogged" :message="message"/>
+    <pagination :currentPage="currentPage" :links="links" @handle-filters="handleFilters"/>
 
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-// import { mapGetters } from 'vuex'
 import store from '../store';
-// import AvertisementCard from '../components/AvertisementCard.vue';
+import AvertisementCard from '../components/AvertisementCard.vue';
+import Pagination from '../components/Pagination.vue';
+import Filters from '../components/Filters.vue';
 export default {
     name: "Home",
     components:{
-      // AvertisementCard
+      AvertisementCard,
+      Pagination,
+      Filters
+      
     },
     data(){
       return{
@@ -213,7 +118,7 @@ export default {
     },
 }
 </script>
-<style scoped>
+<style >
 .home{
   padding-top: 100px;
 }
@@ -239,14 +144,6 @@ export default {
 }
 span{
   padding: 5px;
-}
-.links > span > a{
-  color: #2C3E50;
-  text-decoration: none;
-
-}
-.active{
-  color: red !important;
 }
 .search-advertisements{
   position: absolute;

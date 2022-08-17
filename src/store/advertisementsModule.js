@@ -40,7 +40,6 @@ const advertisementModule = {
     },
     actions:{
         async filterAdverts({state, commit }, payload){
-            // console.log('none', payload.category);
             if(payload.page){
                 state.filterAdvertisements.page = payload.page
             }
@@ -57,12 +56,10 @@ const advertisementModule = {
             }
 
             const FILTERED_ADVERTISEMENTS = await advertisementServices.filterAvertisements(state.filterAdvertisements)
-            console.log();
             commit('SET_ADVERTISEMENTS', FILTERED_ADVERTISEMENTS);
             commit('SET_CURRENT_PAGE', FILTERED_ADVERTISEMENTS.data.current_page)
             commit('SET_LAST_PAGE', FILTERED_ADVERTISEMENTS.data.last_page)
             commit('SET_LINKS', FILTERED_ADVERTISEMENTS.data.links)
-            console.log('FILTERED_ADVERTISEMENTS',FILTERED_ADVERTISEMENTS.data);
         },
         async getAdvertisements( {commit} , payload){
             const ADVERTISEMENTS =  await advertisementServices.getAdvertisements({nextPage: payload.nextPage});

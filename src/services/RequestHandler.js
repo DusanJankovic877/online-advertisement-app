@@ -53,7 +53,7 @@ export class RequestHandler {
 
         }, async error => {
             if (error.response.status === 422) {
-                console.log(error.response);
+                // console.log(error.response);
                 if (error.response.data.errors) {
                     await store.dispatch('errorsModule/setAuthErrors', error.response.data.errors)
                     return Promise.resolve();
@@ -61,7 +61,7 @@ export class RequestHandler {
                 // await store.dispatch('doneLoading')
             } 
             else if(error.response.status === 401){
-                console.log(error.response);
+                // console.log(error.response);
                 await store.dispatch('errorsModule/setUnauthError', error.response.data.error)
                 return Promise.resolve();
             }else {

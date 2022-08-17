@@ -2,11 +2,9 @@ import { RequestHandler } from "./RequestHandler";
 
 class AdvertisementServices extends RequestHandler {
     async getAdvertisements(payload){
-        console.log('services', payload);
         return await this.apiClient.get(`get-advertisements?page=${payload.nextPage}`)
     }
     async filterAvertisements(payload){
-        console.log('payload', payload);
        return await this.apiClient.get(`filter-adverts?page=${payload.page}&category=${payload.category}&title=${payload.title}&priceOrder=${payload.priceOrder}&userId=${payload.userId}`)
     }
     async getAdvertisement(id){
