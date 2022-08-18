@@ -1,11 +1,9 @@
 <template>
   <div class="single-advertisement container" v-if="advertisement">
         <div class="message-success">
-    
           <p><b>{{message}}</b></p>
         </div>
     <div class="card container advertisement-container-card">
-      <!-- {{advertisement.category.title}} -->
       <div class="card-body">
         <img :src="advertisement.image_url" class="card-img-top" alt="picture">
         <div class="card-body advertisement-body">
@@ -25,7 +23,7 @@
           </div>
         </div>
         <div class="buttons">
-          <router-link class="btn btn-success edit-btn" :to="{name: 'create-edit-advertisement', params:{ id: advertisement.id}}">edit</router-link> 
+          <router-link class="btn btn-success edit-btn" :to="{name: 'edit-advertisement', params:{ id: advertisement.id}}">edit</router-link> 
           <button class="btn btn-danger delete-btn" @click="handleDeleteAdvertisement(advertisement.id)">delete</button>
           <router-link class="btn btn-warning go-back-btn" :to="{name: 'home'}">Go Back</router-link> 
         </div>
@@ -65,7 +63,7 @@ export default {
       },
     },
     async created(){
-        await store.dispatch('advertisementsModule/getAdvertisement', this.$route.params.id)
+      await store.dispatch('advertisementsModule/getAdvertisement', this.$route.params.id)
     },
     beforeUnmount() {
       store.dispatch('errorsModule/deleteMessage')

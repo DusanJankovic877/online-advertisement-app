@@ -1,54 +1,53 @@
 <template>
-  <div class="container edit-create" v-if="advertisementToUse">
+   <div class="container edit-create" v-if="advertisement">
     <h1>{{heading}}</h1>
-    
     <form @submit.prevent>
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" v-model="advertisementToUse.title">
+            <input type="text" class="form-control" id="title" v-model="advertisement.title">
             <div class="errors">
                 <p v-for="error in authErrors.title " :key="error.id">{{error}}</p>
             </div>
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">Description</label>
-            <input type="text" class="form-control" id="description" v-model="advertisementToUse.description">
+            <input type="text" class="form-control" id="description" v-model="advertisement.description">
             <div class="errors">
                 <p v-for="error in authErrors.description " :key="error.id">{{error}}</p>
             </div>
           </div>
           <div class="mb-3">
             <label for="image" class="form-label">Image url</label>
-            <input type="text" class="form-control" id="image" v-model="advertisementToUse.image_url">
-            <img :src="advertisementToUse.image_url" alt="" style="width: 100%;">
+            <input type="text" class="form-control" id="image" v-model="advertisement.image_url">
+            <img :src="advertisement.image_url" alt="" style="width: 100%;">
             <div class="errors">
                 <p v-for="error in authErrors.image_url " :key="error.id">{{error}}</p>
             </div>
           </div>
           <div class="mb-3">
             <label for="price" class="form-label">Price</label>
-            <input type="text" class="form-control" id="price" v-model="advertisementToUse.price">
+            <input type="text" class="form-control" id="price" v-model="advertisement.price">
             <div class="errors">
                 <p v-for="error in authErrors.price " :key="error.id">{{error}}</p>
             </div>
           </div>
           <div class="mb-3">
             <label for="city" class="form-label">City</label>
-            <input type="text" class="form-control" id="city" v-model="advertisementToUse.city">
+            <input type="text" class="form-control" id="city" v-model="advertisement.city">
             <div class="errors">
                 <p v-for="error in authErrors.city " :key="error.id">{{error}}</p>
             </div>
           </div>
           <div class="mb-3">
             <label for="category" class="form-label">Category</label>
-            <div class="input-group ">
-
-              <select class="form-select" id="inputGroupSelect01" v-model="advertisementToUse.category">
-
+            <div class="input-group " >
+          
+              <select class="form-select" id="inputGroupSelect01" v-model="advertisement.category_id">
                 <option  
-                  :value="category.id" 
-                  v-for="category in categories" 
-                  :key="category.id"
+                    v-for="category in categories" 
+                    :selected="advertisement.category.title"
+                    :value="category.id" 
+                    :key="category.id"
                 >
                   {{category.title}}
                 </option>
@@ -72,86 +71,43 @@
 import { mapActions, mapGetters } from 'vuex'
 import store from '../store'
 export default {
-  data(){
-    return {
-      advertisementForm:{
-        title: '',
-        description: '',
-        price: '',
-        city: '',
-        category: ''
-      },
-
-      defaultOption: 'Choose...',
-      heading: this.$route.params.id ? 'Edit Advertisement' : 'Create Advertisement'
-    }
-  },
-  computed:{
+    data(){
+        return {
+            heading: 'Edit Advertisement'
+        }
+    },
+    computed: {
     ...mapGetters({
         advertisement: 'advertisementsModule/advertisement', 
         authErrors: 'errorsModule/authErrors', 
         message: 'errorsModule/message', 
         loggedUser: 'authModule/loggedUser',
         categories: 'categoriesModule/categories',
-
-
-        }),
-    advertisementToUse(){
-      return this.$route.params.id ? this.advertisement : this.advertisementForm
-    }
-  },
-  methods:{
+    }),
+    },
+    methods:{
     ...mapActions({
       getCreateEditAdvertisement: 'advertisementsModule/getCreateEditAdvertisement'
     }),
-
     async handleSubmit(){
-      if(this.heading === 'Create Advertisement'){
-        this.advertisementToUse.user_id = this.loggedUser.id; 
-        await this.getCreateEditAdvertisement({advertisement: this.advertisementToUse, heading: this.heading})
-        if(this.message)this.$router.push({name: 'home'});
-      }else if(this.heading === 'Edit Advertisement'){
-        console.log(this.advertisementToUse);
-        await this.getCreateEditAdvertisement({advertisement: this.advertisementToUse, heading: this.heading})
-        this.$router.push({name: 'advertisement', params: { id: this.advertisement.id}})
-      }
+        await this.getCreateEditAdvertisement({advertisement: this.advertisement, heading: this.heading})
+        if(this.message)this.$router.push({name: 'advertisement', params: { id: this.advertisement.id}});
     },
     goBack(){
-      if(this.advertisement)this.$router.push({name: 'advertisement', params: { id: this.advertisement.id}});
-      else this.$router.push({name: 'home'});
+      this.$router.push({name: 'advertisement', params: { id: this.advertisement.id}});
+
     }
-  },
-  async created(){
+    },
+    async created(){
     if(this.$route.params.id)await store.dispatch('advertisementsModule/getAdvertisement', this.$route.params.id);
-    store.dispatch('categoriesModule/getCategories');
-  },
-  beforeUnmount(){
-    store.dispatch('errorsModule/deleteAuthErrors');
-  }
-
-
-
+        store.dispatch('categoriesModule/getCategories');
+    },
+    beforeUnmount(){
+        store.dispatch('errorsModule/deleteAuthErrors');
+    }
 }
 </script>
-<style>
-.edit-create{
-  padding-top: 150px;
-}
-form{
-  background-color: lightgray;
-  padding: 40px 100px !important;
-}
-input[type="text"] {
-  background-color: #612b4e17 !important;
 
-}
-.edit-create > form > div {
-  text-align: left;
-}
-.edit-create-buttons{
-  width: 50%;
-  margin: 0 auto;
-  padding-bottom: 50px; 
-}
+<style>
 
 </style>

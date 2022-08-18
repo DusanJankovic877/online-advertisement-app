@@ -31,6 +31,7 @@ class AdvertisementServices extends RequestHandler {
      * @returns Object with edited advertisement
      */
     async editAdvertisement(advertisement){
+        console.log(advertisement);
         return await this.apiClient.put('edit-advertisement', advertisement)
     }
     /**

@@ -4,7 +4,8 @@ import LoginSignUp from '../views/LoginSignUp.vue'
 import CreateAdd from '../views/LoginSignUp.vue'
 import NotFound from '../views/NotFound.vue'
 import Advertisement from '../views/Advertisement.vue'
-import CreateEditAdvertisement from '../views/CreateEditAdvertisement.vue'
+import CreateAdvertisement from '../views/CreateAdvertisement.vue'
+import EditAdvertisement from '../views/EditAdvertisement.vue'
 
 const routes = [
   {
@@ -23,14 +24,14 @@ const routes = [
     component: Advertisement
   },
   {
-    path: '/advertisement/edit/:id',
-    name: 'create-edit-advertisement',
-    component: CreateEditAdvertisement
+    path: '/advertisement/create',
+    name: 'create-advertisement',
+    component: CreateAdvertisement
   },
   {
-    path: '/advertisement/create',
-    name: 'create-edit-advertisement',
-    component: CreateEditAdvertisement
+    path: '/advertisement/edit/:id',
+    name: 'edit-advertisement',
+    component: EditAdvertisement
   },
   {
     path: '/login-signup',
