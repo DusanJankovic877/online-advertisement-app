@@ -109,7 +109,6 @@ const errorsModule = {
          */
         deleteMessage({ commit }){
             commit('DELETE_MESSAGE')
-            console.log('deletes');
         }
     },
     getters:{

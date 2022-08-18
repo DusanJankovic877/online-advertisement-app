@@ -7,8 +7,16 @@
       :prices="prices"
       :selectedCategory="selectedCategory"
       @handle-filters="handleFilters"
+      
     />
-    <AvertisementCard  :advertisements="advertisements" :loggedUser="loggedUser" :categories="categories" :isLogged="isLogged" :message="message"/>
+    <AvertisementCard  
+      :advertisements="advertisements" 
+      :loggedUser="loggedUser" 
+      :categories="categories" 
+      :isLogged="isLogged" 
+      :message="message"
+      @handle-delete="handleDeleteAdvertisement"
+      />
     <pagination :currentPage="currentPage" :links="links" @handle-filters="handleFilters"/>
 
   </div>

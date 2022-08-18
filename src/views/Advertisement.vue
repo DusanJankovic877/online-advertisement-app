@@ -24,7 +24,7 @@
         </div>
         <div class="buttons">
           <router-link class="btn btn-success edit-btn" :to="{name: 'edit-advertisement', params:{ id: advertisement.id}}">edit</router-link> 
-          <button class="btn btn-danger delete-btn" @click="handleDeleteAdvertisement(advertisement.id)">delete</button>
+          <button class="btn btn-danger delete-btn" @click="handleDeleteAdvertisement({id: advertisement.id})">delete</button>
           <router-link class="btn btn-warning go-back-btn" :to="{name: 'home'}">Go Back</router-link> 
         </div>
       </div>
@@ -45,6 +45,7 @@ export default {
           message: 'errorsModule/message',
           currentPage: 'advertisementsModule/currentPage',
         }),
+
         formattedUserTime(){
           return formatTime(this.loggedUser.created_at)
         },
@@ -58,16 +59,14 @@ export default {
       }),
 
       async handleDeleteAdvertisement(id){
+        console.log('id', id);
         await this.deleteAvertisement({currentPage: this.currentPage, id: id})
         this.$router.push({name: 'home'})
       },
     },
     async created(){
       await store.dispatch('advertisementsModule/getAdvertisement', this.$route.params.id)
-    },
-    beforeUnmount() {
-      store.dispatch('errorsModule/deleteMessage')
-    },
+    }
 }
 </script>
 

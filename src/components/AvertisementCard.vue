@@ -15,7 +15,7 @@
             <!--- ovde puca id-->
             <div v-if="isLogged && loggedUser.id === advertisement.user_id" class="buttons flex-buttons">
               <router-link class="btn btn-success" :to="{name: 'advertisement', params:{ id: advertisement.id}}">View</router-link> 
-                    <button class="btn btn-danger" @click="handleDeleteAdvertisement(advertisement.id)">Delete</button>
+                    <button class="btn btn-danger" @click="handleDeleteAdvertisement({id: advertisement.id})">Delete</button>
 
             </div>
            <div v-else></div>
@@ -36,6 +36,11 @@ props:{
   loggedUser: Object,
   isLogged: Boolean,
   categories: Object
+},
+methods:{
+  handleDeleteAdvertisement(id){
+    return this.$emit('handle-delete', id)
+  }
 }
 }
 </script>

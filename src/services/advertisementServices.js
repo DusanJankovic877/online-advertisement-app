@@ -31,7 +31,6 @@ class AdvertisementServices extends RequestHandler {
      * @returns Object with edited advertisement
      */
     async editAdvertisement(advertisement){
-        console.log(advertisement);
         return await this.apiClient.put('edit-advertisement', advertisement)
     }
     /**
@@ -46,7 +45,8 @@ class AdvertisementServices extends RequestHandler {
      * @param {Number} id 
      */
     async deleteAvertisement(id){
-        await this.apiClient.delete(`delete-advertisement/${id}`)
+        return  await this.apiClient.delete(`delete-advertisement/${id.id}`)
+
     }
 
 }
