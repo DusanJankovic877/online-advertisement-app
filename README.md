@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-You will need [Node.js](https://nodejs.org) version 6.0 or greater installed on your system.
+You will need [Node.js](https://nodejs.org) version 6.0 or greater installed on your system, and vue cli https://cli.vuejs.org/.
 
 
 ## Project setup
